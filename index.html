@@ -922,15 +922,26 @@ document.addEventListener('keydown',e=>{
  else if(e.key==='Enter')submit();
 });
 /* ================= escala ================= */
+let FW=innerWidth,FH=innerHeight;
+const typing=()=>{const a=document.activeElement;return a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')};
 function fit(){
- const vv=window.visualViewport,w=vv?vv.width:innerWidth,h=vv?vv.height:innerHeight;
- const W=Math.max(962,Math.min(1100,Math.round(601*w/h)));
- const s=Math.max(.3,Math.min(w/W,h/601,3));
+ /* con el teclado abierto no se recalcula: la pantalla conserva su tamaño */
+ if(!typing()){FW=innerWidth;FH=innerHeight}
+ const W=Math.max(962,Math.min(1100,Math.round(601*FW/FH)));
+ const s=Math.max(.3,Math.min(FW/W,FH/601,3));
  document.documentElement.style.setProperty('--w',W);
  document.documentElement.style.setProperty('--s',s.toFixed(4));
 }
+/* si el teclado tapa el campo, se sube la pantalla lo justo */
+function lift(){
+ const f=document.getElementById('fit'),vv=window.visualViewport;if(!f)return;
+ let dy=0;
+ if(typing()&&vv){const r=document.activeElement.getBoundingClientRect(),vis=vv.height-12;const cur=parseFloat(f.dataset.dy||0);
+  const bottom=r.bottom-cur;if(bottom>vis)dy=-(bottom-vis);}
+ f.dataset.dy=dy;f.style.transform=dy?`translateY(${dy}px)`:'';f.style.transition='transform .18s';
+}
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
-addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));if(window.visualViewport)visualViewport.addEventListener('resize',fit);fit();
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));if(window.visualViewport)visualViewport.addEventListener('resize',()=>{fit();lift()});document.addEventListener('focusin',()=>setTimeout(lift,250));document.addEventListener('focusout',()=>setTimeout(()=>{fit();lift()},150));fit();
 render();
 </script>
 </body>
