@@ -412,12 +412,10 @@ function homeHTML(){
  return `<div class="screen">
   <div class="topbar"><div class="logo">LOGO</div><div style="font-size:16px;font-weight:500">Local San Borja</div><div class="grow"></div>${clockHTML()}</div>
   <div class="home-body">
-   <h1>¿Qué quieres hacer?</h1>
-   <p>Toca una opción y confirma con tu código de empleado</p>
+   <h1>Local San Borja</h1>
+   <p>Toca para empezar a tomar pedidos</p>
    <div class="cards">
-    <button class="card pri" data-act="start" data-m="entrada">${ic('clock')}<div><b>Marcar entrada</b><span>Empieza tu turno</span></div></button>
-    <button class="card" data-act="start" data-m="salida">${ic('exit')}<div><b>Marcar salida</b><span>Termina tu turno o sal a descanso</span></div></button>
-    <button class="card" data-act="start" data-m="pedidos">${ic('list')}<div><b>Tomar pedidos</b><span>Inicia sesión en el POS</span></div></button>
+    <button class="card pri" data-act="start" data-m="pedidos" style="width:320px;height:190px">${ic('list')}<div><b>Tomar pedidos</b><span>Ver tus mesas y empezar</span></div></button>
    </div>
   </div>
  </div>`;
@@ -782,10 +780,10 @@ function resetCode(m){S.mode=m;S.code='';S.err=null;S.fails=S.fails;S.screen='co
 function enterMap(){
  S.screen='map';S.dlg=null;S.view='mine';S.mapMode='normal';S.panel='reservas';S.sel=null;render();
 }
-function startMapNow(){ // atajo de demostración
+function startMapNow(quiet){ // sin login: entra directo al mapa con las mesas asignadas
  fresh();S.emp=S.employees['1234'];S.empCode='1234';S.employees['1234'].marked=NOW;
  [31,41,42,43].forEach(id=>S.tables[id].owner='me');S.tables[41].pers=4;
- enterMap();snack('Turno iniciado · 4 mesas asignadas');render();
+ enterMap();if(!quiet)snack('Turno iniciado · 4 mesas asignadas');render();
 }
 
 /* ================= eventos ================= */
@@ -794,7 +792,7 @@ stage.addEventListener('click',e=>{
  const a=el.dataset.act, d=el.dataset;
  if(a==='scrim'){ if(e.target!==el)return; if(S.dlg&&['crear','dar','unir','confirmPick'].includes(S.dlg.t)){return} return; }
  switch(a){
-  case 'start':resetCode(d.m);break;
+  case 'start':startMapNow(true);break;
   case 'back':S.code='';S.err=null;go('home');break;
   case 'seg':S.mode=d.m;S.err=null;render();break;
   case 'key':if(S.code.length<4){S.code+=d.k;S.err=null;render()}break;
