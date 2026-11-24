@@ -266,11 +266,26 @@ input{font:inherit;color:inherit}
 .tk .tacts .snd{border:1px solid var(--outline-var)}
 .tk .tacts .pay{background:var(--pri);color:var(--on-pri)}
 .tk .tacts button:disabled{background:var(--surf-hi);color:rgba(230,224,233,.3);border-color:transparent}
-.scrim .dlg.pm{width:760px;max-width:760px;max-height:580px;overflow:auto;padding:20px 24px;border-radius:28px}
-.dlg.pm h4{font-size:24px}
-.dlg.pm .sub{font-size:14px;color:var(--on-var);margin-top:2px}
-.dlg.pm .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:12px}
+.scrim .dlg.pm{width:900px;max-width:900px;height:579px;max-height:579px;overflow:hidden;padding:24px;border-radius:28px;display:flex;flex-direction:column}
+.dlg.pm h4{font-size:24px;line-height:28px}
+.dlg.pm .sub{font-size:14px;line-height:20px;color:var(--on-var);margin-top:2px}
+.pm-body{flex:1;min-height:0;display:flex;margin-top:16px}
+.pm-rail{width:168px;flex:none;display:flex;flex-direction:column;gap:8px}
+.pm-tab{height:48px;width:100%;border:1px solid var(--outline-var);border-radius:24px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;font-weight:500}
+.pm-tab.on{background:#d4c9ea;color:#2a2238;border-color:#d4c9ea}
+.pm-div{width:1px;background:var(--outline-var);margin:0 24px;flex:none}
+.pm-cont{flex:1;min-width:0;overflow:auto}
+.pm-g+.pm-g{margin-top:24px}
 .dlg.pm .gl{font-size:14px;font-weight:500;display:flex;align-items:center;margin-bottom:12px}
+.pm-pre{display:flex;flex-wrap:wrap;gap:8px;background:var(--surf);border-radius:16px;padding:12px}
+.pc{height:32px;padding:0 12px;border:1px solid var(--outline);border-radius:16px;font-size:14px;font-weight:500;display:flex;align-items:center}
+.pc:hover{background:rgba(230,224,233,.07)}
+.pc.on{background:#d4c9ea;color:#2a2238;border-color:#d4c9ea}
+.pm-abr{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ab{height:60px;border:1px solid var(--outline-var);border-radius:12px;padding:0 12px;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.ab b{font-size:14px;font-weight:500;line-height:20px}
+.ab small{font-size:12px;line-height:16px;color:var(--on-var)}
+.ab.mod{background:var(--sec-cont);border:2px solid var(--pri);padding:0 11px}
 .tag{font-size:12px;padding:2px 8px;border-radius:8px;background:var(--sec-cont);color:var(--on-pri-cont);font-weight:500;margin-left:8px}
 .tag.req{background:#5c3a3a;color:#ffdad6}
 .ocs{display:flex;flex-wrap:wrap;gap:12px 8px}
@@ -278,9 +293,7 @@ input{font:inherit;color:inherit}
 .oc:hover{background:rgba(230,224,233,.07)}
 .oc.on{background:#d4c9ea;color:#2a2238;border-color:#d4c9ea;border-radius:20px}
 .oc.t{background:var(--sec-cont);border-color:var(--sec-cont);color:var(--on)}
-.dlg.pm .field{height:56px;margin-top:10px;background:transparent;border:1px solid var(--outline);border-radius:4px}
-.dlg.pm .field .fl{background:var(--surf-hi)}
-.dlg.pm .foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--outline-var);margin-top:14px;padding-top:14px}
+.dlg.pm .foot{display:flex;align-items:center;justify-content:flex-end;gap:8px;border-top:1px solid var(--outline-var);margin-top:12px;padding-top:12px}
 .cant{display:flex;align-items:center;gap:8px;height:40px;border:1px solid var(--outline);border-radius:8px;padding:0 12px;font-size:12px;font-weight:500}
 .cant input{width:30px;background:none;border:0;outline:0;font-size:14px;text-align:center}
 .cant:focus-within{border-color:var(--pri)}
@@ -349,6 +362,7 @@ const P={
  info:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z",
  fwd:"M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z",
  img:"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z",
+ edit:"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
  star:"M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z",
  send:"M2.01 21 23 12 2.01 3 2 10l15 2-15 2z",
  chk:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
@@ -565,7 +579,7 @@ function mapHTML(){
 
 /* ================= toma de pedido ================= */
 const G={
- term:{id:'term',l:'Término',o:['Medium rare','Medium','Medium well','Well done']},
+ term:{id:'term',l:'Término',o:['Rare','Medium rare','Medium','Medium well','Well done']},
  sideB:{id:'side',l:'Guarnición',o:['Papas fritas caseras','Choclo','Puré de papas','Brócoli','Ensalada']},
  sideT:{id:'side',l:'Guarnición',o:['Frijoles negros','Arroz con choclo','Choclo']},
  sideC:{id:'side',l:'Guarnición',o:['Choclo y papas fritas','Papas fritas caseras','Puré de papas','Brócoli']},
@@ -598,6 +612,9 @@ const CATS=['Más pedidos',...M.map(x=>x[0])];
 const ENT=[{n:'Chips con Hot Sauce',x:0},{n:'Bowl Salad',x:0}];
 const PL=[{n:'Boneless Bowl',x:0},{n:'Grilled Chicken Salad',x:0},{n:'Texas Tacos',x:3},{n:'Mix Chicken Crispers',x:0},{n:'Media Libra Burger',x:7},{n:'Big Crispy Chicken Sandwich',x:7},{n:'Chicken Basil Pasta',x:7}];
 const BEB=[{n:'Coca-Cola Sin Azúcar 500 ml',x:0},{n:'Inca Kola Sabor Original 500 ml',x:0},{n:'Sprite 500 ml',x:0},{n:'Fanta 500 ml',x:0},{n:'Inca Kola Sin Azúcar 500 ml',x:0},{n:'Coca-Cola Sabor Original 500 ml',x:0},{n:'Agua San Luis Con Gas 625 ml',x:0}];
+const PREMOD=['86','85','ON SIDE','OUT FIRST','PLAIN',"DON'T MAKE",'TO GO','ONLY','ADD','VER SERVER'];
+const ABR=[['RICE','Arroz'],['GUAC','Guacamole'],['BLACK BEANS','Frijoles negros'],['COB','Choclo'],['FF','Papas fritas'],['VEGGIES','Vegetales al vapor'],['MASH','Puré de papas'],['SW SLAW','Col slaw'],['CEL','Apio'],['F TORT','Tortilla de harina'],['ROOMS','Champiñones'],['CK','Pollo'],['BEEF','Carne'],['QUESO','Chiliqueso'],['HS','Hot sauce'],['HM','Honey mustard'],['HC','Honey chipotle'],['BC','Blue cheese'],['SNS AIOLI','Sweet n’ smoke aioli'],['SC','Sour cream'],['KETCHUP','Ketchup'],['MAYO','Mayonesa'],['P','Pickles'],['MUST','Mostaza'],['L','Lechuga'],['T','Tomate'],['O','Cebolla']];
+const pmKey=d=>JSON.stringify([Object.entries(d.sel).sort(),Object.entries(d.mm).sort()]);
 const money=n=>'S/ '+Number(n).toFixed(2);
 function newOrder(n){return {seats:Array.from({length:n+1},()=>({items:[]})),cur:Math.min(1,n),cat:'Más pedidos'}}
 function ord(){const m=S.order;let o=S.orders[m.name];if(!o||o.seats.length!==m.pers+1)o=S.orders[m.name]=newOrder(m.pers);return o}
@@ -617,8 +634,9 @@ function ticketHTML(o){
  const tot=orderTotal(o);
  const rows=o.seats.map((s,i)=>{
   const n=seatItems(s);
+  if(i===0&&!n&&i!==o.cur)return '';
   if(i!==o.cur)return `<button class="tl" data-act="seat" data-i="${i}"><span>${seatName(i)} · ${n?n+(n===1?' ítem':' ítems'):'—'}</span>${n?`<span>${money(seatTotal(s))}</span>`:''}</button>`;
-  const lines=s.items.length?s.items.map((x,k)=>`<button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button>${x.sub?`<div class="mod">${x.sub}</div>`:''}${(x.mods||[]).map(md=>`<div class="mod ${/^SIN /.test(md)?'neg':''}">${md}</div>`).join('')}`).join(''):`<div class="empty">Aún sin productos · toca una card del catálogo</div>`;
+  const lines=s.items.length?s.items.map((x,k)=>`<button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button>${x.sub?`<div class="mod">${x.sub}</div>`:''}${(x.mods||[]).map(md=>`<div class="mod ${/^SIN |( 86| 85|DON'T MAKE)$/.test(md)?'neg':''}">${md}</div>`).join('')}`).join(''):`<div class="empty">Aún sin productos · toca una card del catálogo</div>`;
   return `<div class="tact"><div class="hd"><span>${seatName(i)}</span><span>Tomando pedido</span></div>${lines}</div>`;
  }).join('');
  return `<div class="tk"><div class="th">Ticket<span>Chk 2304</span></div><div class="tlist">${rows}</div>
@@ -700,14 +718,19 @@ function dlgHTML(){
   <div class="cmp"><div class="up-card"><div><span class="chp">Tu elección</span></div><div class="imgp">${ic('img',24)}<span>${d.name}</span></div><div><h5>${d.name}</h5><div class="pr" style="margin-top:6px">${money(PROD[d.name].p)}</div></div><button class="pill out" style="margin-top:auto;justify-content:center;border-radius:20px;height:44px;border-color:var(--outline-var)" data-act="up-keep">Mantener</button></div>
   <div class="up-card best"><div style="display:flex;gap:8px"><span class="chp" style="gap:8px">${ic('star',18)}Más pedido</span><span class="chp">+ ${money(u.p-PROD[d.name].p)}</span></div><div class="imgp">${ic('img',24)}<span>${u.name}</span></div><div><h5>${u.name}</h5><p style="margin-top:8px">${u.desc}</p></div><div class="pr">${money(u.p)}<small>en vez de ${money(PROD[d.name].p)}</small></div><button class="pill filled big" style="height:56px;border-radius:28px;font-size:16px" data-act="up-change">Cambiar a ${u.name}</button></div></div></div>`}
  if(d.t==='prod'){
-  const gs=PROD[d.name].groups,ok=gs.every(g=>d.sel[g.id]);
-  const tg=v=>`<span class="tag ${v?'':'req'}">${v?'Completo':'Requerido'}</span>`;
+  const gs=PROD[d.name].groups,done=gs.every(g=>d.sel[g.id]),miss=gs.find(g=>!d.sel[g.id]);
+  const ok=done&&(d.mode!=='edit'||pmKey(d)!==d.orig);
+  const lab=!done?'Elige '+miss.l.toLowerCase():(d.mode==='edit'?'Guardar cambios':'Agregar');
+  const tg=v=>`<span class="tag ${v?'':'req'}">${v?'Completo':'Obligatorio'}</span>`;
+  const tab=(k,l,i)=>`<button class="pm-tab ${d.sec===k?'on':''}" data-act="pm-sec" data-v="${k}">${ic(i,20)}${l}</button>`;
+  const cont=d.sec==='pers'
+   ?gs.map(g=>`<div class="pm-g"><div class="gl">${g.l}${tg(d.sel[g.id])}</div><div class="ocs">${g.o.map(v=>`<button class="oc ${d.sel[g.id]===v?'on':''}" data-act="pm-opt" data-g="${g.id}" data-v="${v}">${v}</button>`).join('')}</div></div>`).join('')
+   :`<div class="pm-pre">${PREMOD.map(v=>`<button class="pc ${d.pre===v?'on':''}" data-act="pm-pre" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
+    <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div>`;
   b=`<div class="dlg pm"><h4>${d.name}</h4><div class="sub">${S.order.name} · ${money(d.price)}</div>
-  <div class="cols" style="grid-template-columns:repeat(${gs.length},1fr)">${gs.map(g=>`<div><div class="gl">${g.l}${tg(d.sel[g.id])}</div><div class="ocs">${g.o.map(v=>`<button class="oc ${d.sel[g.id]===v?'on':''}" data-act="pm-opt" data-g="${g.id}" data-v="${v}">${v}</button>`).join('')}</div></div>`).join('')}</div>
-  <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center"><div class="gl" style="margin:0">Quitar o agregar</div><span style="font-size:12px;color:var(--on-var)">Opcional</span></div>
-  <div class="ocs" style="margin-top:10px;gap:8px">${['Agregar','Quitar'].map(v=>`<button class="oc ${d.ingMode===v?'t':''}" data-act="pm-mode" data-v="${v}">${d.ingMode===v?ic('check',18):''}${v}</button>`).join('')}</div>
-  <div class="field"><span class="fl">Ingrediente</span><input id="ing" placeholder="Ej. Cebolla" autocomplete="off" value="${(d.ing||'').replace(/"/g,'&quot;')}"></div>
-  <div class="foot"><label class="cant">Cant.<input id="pq" inputmode="numeric" value="${d.qty}" autocomplete="off"></label><div style="display:flex;align-items:center;gap:8px"><button class="tb" data-act="pm-close" style="padding:10px 24px">Cerrar</button><button class="pill filled" style="height:56px;padding:0 32px;font-size:16px" data-act="pm-ok" ${ok?'':'disabled'}>${d.mode==='edit'?'Guardar cambios':'Agregar'}</button></div></div></div>`}
+  <div class="pm-body"><div class="pm-rail">${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-div"></div><div class="pm-cont">${cont}</div></div>
+  <div class="foot"><button class="tb" data-act="pm-close" style="padding:10px 24px">Cerrar</button><button class="pill filled" style="height:56px;min-width:165px;justify-content:center;padding:0 32px;font-size:16px" data-act="pm-ok" ${ok?'':'disabled'}>${lab}</button></div></div>`}
  return `<div class="scrim" data-act="scrim">${b}</div>`;
 }
 const snackHTML=()=>S.snack?`<div class="snack ${S.snack.err?'err':''}"><span>${S.snack.text}</span>${S.snack.label?`<button data-act="${S.snack.act}">${S.snack.label}</button>`:''}</div>`:'';
@@ -838,7 +861,7 @@ stage.addEventListener('click',e=>{
   case 'prod':{
    const n=d.n,p=PROD[n],o=ord();
    if(p.three){openThree();break}
-   if(p.groups){S.dlg={t:'prod',mode:'add',name:n,price:p.p,sel:{},ing:'',ingMode:'Quitar',qty:1,si:o.cur};render();break}
+   if(p.groups){const sel={};p.groups.forEach(g=>{if(g.id==='term')sel.term='Medium well'});S.dlg={t:'prod',mode:'add',name:n,price:p.p,sel,mm:{},pre:null,sec:'pers',qty:1,si:o.cur};render();break}
    if(p.upsell){S.dlg={t:'up',name:n,si:o.cur};render();break}
    addItem(o,o.cur,{base:n,name:n,price:p.p,qty:1,mods:[]});render();break}
   case 'up-close':S.dlg=null;render();break;
@@ -846,15 +869,18 @@ stage.addEventListener('click',e=>{
   case 'up-change':{const n=S.dlg.name,u=PROD[n].upsell,o=ord();addItem(o,S.dlg.si,{base:n,name:u.name,price:u.p,qty:1,mods:[]});S.dlg=null;snack(`Cambiaste a ${u.name}`);render();break}
   case 'line':{
    const o=ord(),it=o.seats[+d.i].items[+d.k];
-   if(it&&it.custom){const c=it.custom;S.dlg={t:'prod',mode:'edit',name:it.base,price:it.price,sel:{...c.sel},ing:c.ing||'',ingMode:c.ingMode||'Quitar',qty:it.qty,si:+d.i,idx:+d.k};render()}
+   if(it&&it.custom){const c=it.custom;S.dlg={t:'prod',mode:'edit',name:it.base,price:it.price,sel:{...c.sel},mm:{...(c.mm||{})},pre:null,sec:'pers',qty:it.qty,si:+d.i,idx:+d.k};S.dlg.orig=pmKey(S.dlg);render()}
    break}
   case 'pm-opt':S.dlg.sel[d.g]=d.v;render();break;
-  case 'pm-mode':S.dlg.ingMode=d.v;render();break;
+  case 'pm-sec':S.dlg.sec=d.v;render();break;
+  case 'pm-pre':S.dlg.pre=S.dlg.pre===d.v?null:d.v;render();break;
+  case 'pm-abr':{const x=S.dlg;if(x.pre){x.mm[d.v]=x.pre;x.pre=null}else if(x.mm[d.v])delete x.mm[d.v];render();break}
   case 'pm-close':S.dlg=null;render();break;
   case 'pm-ok':{
    const x=S.dlg,o=ord(),gs=PROD[x.name].groups;if(!gs.every(g=>x.sel[g.id]))break;
-   const ing=(x.ing||'').trim(),mods=gs.map(g=>x.sel[g.id]);if(ing)mods.push((x.ingMode==='Quitar'?'SIN ':'EXTRA ')+ing);
-   const custom={sel:{...x.sel},ing:ing,ingMode:x.ingMode};
+   if(x.mode==='edit'&&pmKey(x)===x.orig)break;
+   const mods=gs.map(g=>x.sel[g.id]).concat(Object.entries(x.mm).map(([a,v])=>a+' '+v));
+   const custom={sel:{...x.sel},mm:{...x.mm}};
    if(x.mode==='edit'){const it=o.seats[x.si].items[x.idx];it.mods=mods;it.custom=custom;it.qty=x.qty;it.k=it.base+'|'+mods.join(',')}
    else addItem(o,x.si,{base:x.name,name:x.name,price:x.price,qty:x.qty,mods,custom});
    S.dlg=null;render();break}
@@ -864,6 +890,9 @@ stage.addEventListener('click',e=>{
   case 'th-pick':{const sd=S.th.seats[S.th.sel-1];sd[d.g]=d.v;render();break}
   case 'th-save':{
    const th=S.th,o=ord();if(!thDone())break;
+   if(th.mode==='pivot'){
+    th.seats.forEach((sd,i)=>{const ex=PL.find(x=>x.n===sd.p);addItem(o,i+1,{base:'3 for Me',name:'3 for Me',price:Math.round((25.9+(ex?ex.x:0))*100)/100,qty:1,mods:[sd.e,sd.p,sd.b]})});
+    o.cur=th.n;S.screen='order';S.th=null;snack(`3 for Me agregado a ${th.n===1?'1 asiento':th.n+' asientos'}`);render();break}
    addItem(o,0,{base:'3 for Me',name:'3 For Me',price:25.9,qty:th.n,total:thTotal(),mods:[],sub:'Entrada + plato + bebida',three:true});
    o.cur=0;S.screen='order';S.th=null;snack(`3 For Me × ${th.n} agregado a Compartido`);render();break}
   case 'crear-open':S.dlg={t:'crear',name:'',pers:0};render();break;
