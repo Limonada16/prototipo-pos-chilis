@@ -230,18 +230,20 @@ input{font:inherit;color:inherit}
 .ttl small{display:block;font-size:12px;color:var(--on-var);line-height:16px}
 .ord{flex:1;display:flex;gap:12px;padding:0 16px 16px;min-height:0}
 .cat{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;padding-top:0}
-.seatcard{background:var(--surf);border-radius:16px;padding:10px 12px 12px;margin:0 0 8px;flex:none}
+.seatcard{background:var(--surf);border-radius:12px;padding:10px 12px;margin:0 0 8px;flex:none}
 .seatcard .sh{font-size:11px;color:var(--on-var);display:flex;gap:12px;align-items:center;margin-bottom:8px;letter-spacing:.3px}
 .seats{display:flex;flex-wrap:wrap;gap:6px}
+.seatcard .seats{gap:8px 6px;padding:4px 0}
 .seat{height:40px;min-width:40px;padding:0 12px;border:1px solid var(--outline-var);border-radius:12px;font-size:14px;display:grid;place-items:center;white-space:nowrap}
 .seat:hover{background:rgba(230,224,233,.07)}
 .seat.on{background:#d4c9ea;color:#2a2238;border-color:#d4c9ea;border-radius:20px}
-.cats{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none;flex:none}
+.cats{display:flex;flex-wrap:wrap;gap:8px 6px;padding:4px 0 8px;flex:none}
 .cats::-webkit-scrollbar{display:none}
-.cch{height:32px;padding:0 14px;border:1px solid var(--outline);border-radius:8px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px;flex:none}
+.cch{height:32px;padding:0 9px;border:1px solid var(--outline-var);border-radius:8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;flex:none}
 .cch.on{background:var(--sec-cont);border-color:var(--sec-cont)}
-.prods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px;align-content:start;overflow:auto;flex:1;min-height:0;padding-bottom:4px;scrollbar-width:thin}
-.prod{position:relative;width:auto;height:84px;flex:none;border:1px solid var(--outline-var);border-radius:12px;background:var(--surf);padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-size:13px;line-height:16px;font-weight:500;transition:transform .1s}
+.prods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;align-content:start;overflow:auto;flex:1;min-height:0;padding-bottom:4px;scrollbar-width:thin}
+.prod{position:relative;width:auto;height:78px;flex:none;border:1px solid var(--outline-var);border-radius:12px;background:var(--surf);padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-size:14px;line-height:18px;font-weight:500;transition:transform .1s}
+.prod>span:last-child{font-weight:400}
 .prod .pn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-right:14px}
 .prod:hover{filter:brightness(1.15)}
 .prod:active{transform:scale(.97)}
@@ -625,25 +627,31 @@ const swX=n=>{const s=SWAP.find(x=>x[0]===n);return s?s[1]:0};
 const M=[
 ['Promos',[['3 for Me',25.9,'three'],['Chili\'s Para 2',59],['Chili\'s Para 4',122.9],['A Chiliar 1 Tacos',31.9],['A Chiliar de a 2 Doble Taco',47.9],['Promo A Chilear de a 3',68],['Crispy Chicken Crispers con Papas Fritas',27],['Estadio Chili\'s Box',110]]],
 ['Entradas',[['Tostadas Chips',17],['Tostadas Chips con Guacamole',22],['Crispy Onion Rings',23],['Skillet Queso',27],['Dip Trío',37],['Triple Dipper',38],['Burger Bites',36],['Quesadillas',32],['Quesadillas de Pollo',38],['Quesadilla Bites',37],['New Wings',33,[G.wing,G.dip]],['Triple Wings',52,[G.wing,G.dip]],['Classic Nachos',33],['Chicken Nachos',40],['Fiesta Platter',70]]],
-['Hamburguesas',[['Big Smasher Burger',37,[G.term,G.sideB]],['Bacon Jam Street Burger',39,[G.term,G.sideB]],['Chipotle Street Burger',39,[G.term,G.sideB]],['Oldtimer Burger',35,[G.term,G.sideB]],['Cheddar Oldtimer Burger',37,[G.term,G.sideB]],['Bacon Cheese Burger',41,[G.term,G.sideB]],['Alex\'s Santa Fe Burger',42,[G.term,G.sideB]],['Bacon Rancher Burger',48,[G.term,G.sideB]],['Honey Chipotle Big Crispy Chicken Sandwich',40,[G.sideB]],['Spicy Big Crispy Chicken Sandwich',40,[G.sideB]],['Buffalo Big Crispy Chicken Sandwich',40,[G.sideB]],['Deluxe Crispy Chicken Sandwich',43,[G.sideB]]]],
-['Tacos y fajitas',[['Crispy Chicken Tacos',41,[G.sideT]],['Chicken Club Tacos',42,[G.sideT]],['Santa Fe Chicken Taco',43,[G.sideT]],['Ranchero Chicken Tacos',45,[G.sideT]],['Bacon Jam Tacos',47,[G.sideT]],['Fajitas de Pollo',50,'upsell'],['Fajitas Mixtas',52,[G.tort,G.sideT]],['Fajitas de Carne',54,[G.tort,G.sideT]]]],
-['Crispers',[['Crispy Chicken Crispers Clásicos',39,[G.dipC,G.sideC]],['Crispy Chicken Crispers Honey Chipotle',39,[G.dipC,G.sideC]],['Chicken Fried Chicken',42,[G.sideC]],['Chicken Crispers',42,[G.dipC,G.sideC]]]],
-['Costillas',[['Baby Back Ribs Media Orden',62,[G.ribs,G.sideC]],['Baby Back Ribs Orden Completa',85,[G.ribs,G.sideC]],['400 gr Bronto Costillas',75,[G.ribs,G.sideC]],['800 gr Bronto Costillas',101,[G.ribs,G.sideC]],['1200 gr Bronto Costillas',129,[G.ribs,G.sideC]],['Smoke House Combo',89,[G.ribs,G.sideC]]]],
+['Burgers',[['Big Smasher Burger',37,[G.term,G.sideB]],['Bacon Jam Street Burger',39,[G.term,G.sideB]],['Chipotle Street Burger',39,[G.term,G.sideB]],['Oldtimer Burger',35,[G.term,G.sideB]],['Cheddar Oldtimer Burger',37,[G.term,G.sideB]],['Bacon Cheese Burger',41,[G.term,G.sideB]],['Alex\'s Santa Fe Burger',42,[G.term,G.sideB]],['Bacon Rancher Burger',48,[G.term,G.sideB]]]],
+['Sandwich',[['Honey Chipotle Big Crispy Chicken Sandwich',40,[G.sideB]],['Spicy Big Crispy Chicken Sandwich',40,[G.sideB]],['Buffalo Big Crispy Chicken Sandwich',40,[G.sideB]],['Deluxe Crispy Chicken Sandwich',43,[G.sideB]]]],
+['Pollo',[['Crispy Chicken Crispers Clásicos',39,[G.dipC,G.sideC]],['Crispy Chicken Crispers Honey Chipotle',39,[G.dipC,G.sideC]],['Chicken Fried Chicken',42,[G.sideC]],['Chicken Crispers',42,[G.dipC,G.sideC]]]],
+['Ribs',[['Baby Back Ribs Media Orden',62,[G.ribs,G.sideC]],['Baby Back Ribs Orden Completa',85,[G.ribs,G.sideC]],['400 gr Bronto Costillas',75,[G.ribs,G.sideC]],['800 gr Bronto Costillas',101,[G.ribs,G.sideC]],['1200 gr Bronto Costillas',129,[G.ribs,G.sideC]],['Smoke House Combo',89,[G.ribs,G.sideC]]]],
 ['Carnes',[['Ribeye 2.0',68,[G.termR,G.side1,G.side2]]]],
-['Ensaladas y pastas',[['Grilled Chicken Salad',30,[G.dress]],['Boneless Buffalo Chicken Salad',39,[G.dress]],['Santa Fe Crispers Salad',39,[G.dress]],['Quesadilla Explosion Salad',41,[G.dress]],['Guacamole Chicken Bowl',39],['Santa Fe Chicken Bowl',40],['Chicken Basil Pasta',39],['Chicken Cajun Pasta',41],['Margarita Grilled Chicken',39],['Guiltless Chicken Platter',40]]],
-['Postres y guarniciones',[['Molten Chocolate Cake',28],['Paradise Pie',30],['Papas Fritas Caseras',16],['Brócoli',15],['Puré de Papas',15],['Guacamole',13],['Frijoles Negros',13],['Arroz con Choclo',13],['Choclo',13],['Hot Sauce',11],['Ranch 5 oz',6],['BBQ 5 oz',6],['Chipotle Mayo 5 oz',6]]],
-['Bebidas',[['Coca-Cola Sabor Original',8],['Coca-Cola Sin Azúcar',8],['Inca Kola Sabor Original',8],['Inca Kola Sin Azúcar',8],['Fanta',8],['Sprite',8],['Coca-Cola 1 litro',11],['Inca Kola 1 litro',11],['Agua San Luis Sin Gas',5],['Agua San Luis Con Gas',5]]],
-['Cervezas',[['Amstel',15],['Heineken',16],['Corona',16],['Stella Artois',16],['Pilsen',17],['Cusqueña de Trigo',18]]]
+['Tacos',[['Crispy Chicken Tacos',41,[G.sideT]],['Chicken Club Tacos',42,[G.sideT]],['Santa Fe Chicken Taco',43,[G.sideT]],['Ranchero Chicken Tacos',45,[G.sideT]],['Bacon Jam Tacos',47,[G.sideT]]]],
+['Fajitas',[['Fajitas de Pollo',50,'upsell'],['Fajitas Mixtas',52,[G.tort,G.sideT]],['Fajitas de Carne',54,[G.tort,G.sideT]]]],
+['Pastas',[['Chicken Basil Pasta',39],['Chicken Cajun Pasta',41]]],
+['Ensaladas',[['Grilled Chicken Salad',30,[G.dress]],['Boneless Buffalo Chicken Salad',39,[G.dress]],['Santa Fe Crispers Salad',39,[G.dress]],['Quesadilla Explosion Salad',41,[G.dress]],['Guacamole Chicken Bowl',39],['Santa Fe Chicken Bowl',40]]],
+['Light',[['Margarita Grilled Chicken',39],['Guiltless Chicken Platter',40]]],
+['Postres',[['Molten Chocolate Cake',28],['Paradise Pie',30]]],
+['Sides',[['Papas Fritas Caseras',16],['Brócoli',15],['Puré de Papas',15],['Guacamole',13],['Frijoles Negros',13],['Arroz con Choclo',13],['Choclo',13]]],
+['Salsas',[['Hot Sauce',11],['Ranch 5 oz',6],['BBQ 5 oz',6],['Chipotle Mayo 5 oz',6]]],
+['Bebidas',[['Coca-Cola Sabor Original',8],['Coca-Cola Sin Azúcar',8],['Inca Kola Sabor Original',8],['Inca Kola Sin Azúcar',8],['Fanta',8],['Sprite',8],['Coca-Cola 1 litro',11],['Inca Kola 1 litro',11],['Agua San Luis Sin Gas',5],['Agua San Luis Con Gas',5],['Amstel',15],['Heineken',16],['Corona',16],['Stella Artois',16],['Pilsen',17],['Cusqueña de Trigo',18]]],
+['LTO',[]],
+['Menú Niños',[]]
 ];
 const PROD={},CATP={};
 M.forEach(([c,L])=>{CATP[c]=L.map(([n,p,x])=>{
  const o=PROD[n]||(PROD[n]={p});
  if(x==='three')o.three=true;else if(x==='upsell')o.upsell={name:'Fajitas Mixtas',p:52,desc:'Pollo y carne a la parrilla con tortillas, pico de gallo y guacamole.'};else if(x)o.groups=x;
  return n})});
-CATP['Más pedidos']=['Big Smasher Burger','Chicken Crispers','Crispy Chicken Tacos','Fajitas de Pollo','Ribeye 2.0','Baby Back Ribs Media Orden','Triple Dipper','Molten Chocolate Cake','Coca-Cola Sabor Original'];
 /* Ribeye 2.0: término + 2 guarniciones (variante «Varias guarniciones») y foto de producto */
 Object.assign(PROD['Ribeye 2.0'],{def:{term:'Medium',side1:'Puré de papas'},lab:'Agregar producto',sub:'incluye 2 guarniciones',img:'ribeye.jpg'});
-const CATS=['Más pedidos',...M.map(x=>x[0])];
+const CATS=M.map(x=>x[0]);
 const ENT=[{n:'Chips con Hot Sauce',x:0},{n:'Bowl Salad',x:0}];
 const PL=[{n:'Boneless Bowl',x:0},{n:'Grilled Chicken Salad',x:0},{n:'Texas Tacos',x:3},{n:'Mix Chicken Crispers',x:0},{n:'Media Libra Burger',x:7},{n:'Big Crispy Chicken Sandwich',x:7},{n:'Chicken Basil Pasta',x:7}];
 const BEB=[{n:'Coca-Cola Sin Azúcar 500 ml',x:0},{n:'Inca Kola Sabor Original 500 ml',x:0},{n:'Sprite 500 ml',x:0},{n:'Fanta 500 ml',x:0},{n:'Inca Kola Sin Azúcar 500 ml',x:0},{n:'Coca-Cola Sabor Original 500 ml',x:0},{n:'Agua San Luis Con Gas 625 ml',x:0}];
@@ -652,7 +660,7 @@ const ABR=[['RICE','Arroz'],['GUAC','Guacamole'],['BLACK BEANS','Frijoles negros
 const pmKey=d=>JSON.stringify([Object.entries(d.sel).sort(),Object.entries(d.mm).sort(),Object.entries(d.sw||{}).sort()]);
 const pmPrice=d=>d.price+Object.values(d.sw||{}).reduce((a,n)=>a+swX(n),0);
 const money=n=>'S/ '+Number(n).toFixed(2);
-function newOrder(n){return {seats:Array.from({length:n+1},()=>({items:[]})),cur:Math.min(1,n),cat:'Más pedidos'}}
+function newOrder(n){return {seats:Array.from({length:n+1},()=>({items:[]})),cur:Math.min(1,n),cat:'Promos'}}
 function ord(){const m=S.order;let o=S.orders[m.name];if(!o||o.seats.length!==m.pers+1)o=S.orders[m.name]=newOrder(m.pers);return o}
 function openOrder(name,pers){S.order={name,pers};ord();S.screen='order';S.snack=null;S.dlg=null;S.sel=null;render()}
 const seatName=i=>i===0?'Compartido':'Asiento '+i;
@@ -685,9 +693,9 @@ function orderHTML(){
  const names=CATP[o.cat]||[];
  const prods=names.length?names.map(n=>{const c=prodCount(o,n);return `<button class="prod ${c?'has':''}" data-act="prod" data-n="${n}">${c?`<span class="cnt">${c}</span>`:''}<span class="pn">${n}</span><span>${money(PROD[n].p)}</span></button>`}).join(''):`<div class="help" style="grid-column:1/5">Esta categoría no tiene productos en el prototipo.</div>`;
  return `<div class="screen">
-  <div class="topbar" style="height:65px"><button class="bk" data-act="order-back" aria-label="Volver">${ic('back')}</button><div class="ttl"><b>${m.name}</b><small>${m.pers} ${m.pers===1?'comensal':'comensales'}</small></div><div class="grow"></div><button class="opb" data-act="opts">Opciones</button></div>
-  <div class="ord" style="padding-top:16px">
-   <div class="cat" style="margin-top:-1px"><div class="seatcard"><div class="sh"><span>Asiento</span><span>● con ítems</span><span>○ vacío</span></div><div class="seats">${seatsB}</div></div>
+  <div class="topbar" style="height:65px;border-bottom:0;padding:8px 16px"><button class="bk" data-act="order-back" aria-label="Volver">${ic('back')}</button><div class="ttl"><b>${m.name}</b><small>${m.pers} ${m.pers===1?'comensal':'comensales'}</small></div><div class="grow"></div></div>
+  <div class="ord" style="padding-top:0">
+   <div class="cat"><div class="seatcard"><div class="sh"><span>Asiento</span><span>● con ítems</span><span>○ vacío</span></div><div class="seats">${seatsB}</div></div>
     <div class="cats">${CATS.map(c=>`<button class="cch ${o.cat===c?'on':''}" data-act="cat" data-c="${c}">${o.cat===c?ic('check',18):''}${c}</button>`).join('')}</div>
     <div class="prods">${prods}</div></div>
    ${ticketHTML(o)}
