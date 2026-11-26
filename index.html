@@ -214,6 +214,7 @@ input{font:inherit;color:inherit}
 .sb{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline)}
 .sb.f{background:var(--pri);border-color:var(--pri);color:var(--on-pri)}
 .sb:disabled{opacity:.38}
+.step .c b.bx{border:1px solid var(--on);border-radius:4px;min-width:64px;height:48px;display:grid;place-items:center;font-size:16px}
 .rad{display:flex;align-items:center;gap:8px;padding:0 12px;height:56px;border-radius:12px;width:100%;text-align:left}
 .rad:hover{background:rgba(230,224,233,.06)}
 .rad i{width:48px;height:48px;display:grid;place-items:center;flex:none}
@@ -849,6 +850,9 @@ function dlgHTML(){
  if(d.t==='up'){const u=PROD[d.name].upsell;b=`<div class="dlg up"><div class="hdr"><div><small>Se agrega al ${seatName(d.si).toLowerCase()}</small><h4>¿Lo hacemos mejor?</h4></div><button class="iconbtn" data-act="up-close" aria-label="Cerrar">${ic('close')}</button></div>
   <div class="cmp"><div class="up-card"><div><span class="chp">Tu elección</span></div><div class="imgp">${ic('img',24)}<span>${d.name}</span></div><div><h5>${d.name}</h5><div class="pr" style="margin-top:6px">${money(PROD[d.name].p)}</div></div><button class="pill out" style="margin-top:auto;justify-content:center;border-radius:20px;height:44px;border-color:var(--outline-var)" data-act="up-keep">Mantener</button></div>
   <div class="up-card best"><div style="display:flex;gap:8px"><span class="chp" style="gap:8px">${ic('star',18)}Más pedido</span><span class="chp">+ ${money(u.p-PROD[d.name].p)}</span></div><div class="imgp">${ic('img',24)}<span>${u.name}</span></div><div><h5>${u.name}</h5><p style="margin-top:8px">${u.desc}</p></div><div class="pr">${money(u.p)}<small>en vez de ${money(PROD[d.name].p)}</small></div><button class="pill filled big" style="height:56px;border-radius:28px;font-size:16px" data-act="up-change">Cambiar a ${u.name}</button></div></div></div>`}
+ if(d.t==='abrir')b=`<div class="dlg" style="width:400px"><div class="in"><h4>Mesa ${d.id}</h4><p style="margin-top:12px">Libre · 4 sillas. ¿Cuántos comensales se sentarán?</p>
+  <div class="step" style="margin-top:20px"><span>Comensales</span><div class="c"><button class="sb" data-act="ab-n" data-d="-1" ${d.n<=1?'disabled':''} aria-label="Menos">${ic('remove',20)}</button><b class="bx">${d.n}</b><button class="sb f" data-act="ab-n" data-d="1" aria-label="Más">${ic('add',20)}</button></div></div></div>
+  <div class="acts"><button class="tb" data-act="ab-cancel">Cancelar</button><button class="tb" data-act="ab-ok">Tomar pedido</button></div></div>`;
  if(d.t==='tmod'){
   const tab=(k,l,i)=>`<button class="pm-tab ${d.sec===k?'on':''}" data-act="pm-sec" data-v="${k}">${ic(i,20)}${l}</button>`;
   const sub=d.mode==='qty'?`${GL[d.g]} · aplica a ${d.n} de ${d.max} unidades`:`Asiento ${d.seat} · ${GL[d.g]}`;
@@ -955,7 +959,7 @@ function enterMap(){
 }
 function startMapNow(quiet){ // sin login: entra directo al mapa con las mesas asignadas
  fresh();S.emp=S.employees['1234'];S.empCode='1234';S.employees['1234'].marked=NOW;
- [13,16,17,18].forEach(id=>S.tables[id].owner='me');S.tables[16].pers=4;S.tables[18].pers=4;
+ [13,16,17,18].forEach(id=>S.tables[id].owner='me');
  enterMap();if(!quiet)snack('Turno iniciado · 4 mesas asignadas');render();
 }
 
@@ -1014,6 +1018,9 @@ stage.addEventListener('click',e=>{
    if(S.mode==='pedidos')toPick(true);else success();break}
   /* elegir mesas */
   case 'tbl':tblTap(+d.id);break;
+  case 'ab-n':S.dlg.n=Math.max(1,Math.min(99,S.dlg.n+(+d.d)));render();break;
+  case 'ab-cancel':S.dlg=null;render();break;
+  case 'ab-ok':{const id=S.dlg.id,n=S.dlg.n,t=S.tables[id];t.status='occ';t.pers=n;t.total=0;S.dlg=null;openOrder('Mesa '+id,n);break}
   case 'pick-remove':S.pick.delete(+d.id);render();break;
   case 'pick-skip':enterMap();snack('Turno iniciado sin mesas asignadas');render();break;
   case 'pick-start':S.dlg={t:'confirmPick'};render();break;
@@ -1154,6 +1161,7 @@ function tblTap(id){
  if(S.mapMode==='dar'){S.giveSel.has(id)?S.giveSel.delete(id):S.giveSel.add(id);render();return}
  if(S.mapMode==='unir'){S.joinSel.has(id)?S.joinSel.delete(id):S.joinSel.add(id);render();return}
  const t=S.tables[id];
+ if(t.owner==='me'&&t.status==='free'&&!t.join&&!t.pers){S.dlg={t:'abrir',id,n:4};render();return}
  if(t.owner==='me'){
   let name='Mesa '+id,pers=t.pers||4;
   if(t.join){const g=IDS.filter(x=>S.tables[x].join===t.join);name='Mesas '+list(g);}
