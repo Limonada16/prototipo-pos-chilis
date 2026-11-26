@@ -132,6 +132,7 @@ input{font:inherit;color:inherit}
 /* ---- mapa ---- */
 .mbody{flex:1;display:flex;gap:12px;padding:16px;min-height:0}
 .panel{background:var(--surf);border-radius:28px;display:flex;flex-direction:column;min-height:0}
+.left.full{width:auto;flex:1}
 .left{width:656px;padding:16px;overflow:hidden}
 .right{width:260px;padding:16px}
 .search{position:relative;height:56px;border:1px solid var(--outline);border-radius:4px;display:flex;align-items:center;gap:14px;padding:0 16px;margin-bottom:12px}
@@ -139,35 +140,44 @@ input{font:inherit;color:inherit}
 .search input{background:none;border:0;outline:0;font-size:16px;flex:1;min-width:0}
 .search input::placeholder{color:var(--on-var)}
 .search svg{color:var(--on-var);flex:none}
-.grid{display:grid;grid-template-columns:repeat(10,54px);gap:8px;align-content:start}
-.tbl{position:relative;width:54px;height:54px;border-radius:14px;border:1px solid var(--outline);font-size:16px;display:grid;place-items:center;transition:transform .1s}
+/* grid 9 columnas con panel · 11 a todo el ancho */
+.grid{display:grid;grid-template-columns:repeat(9,56px);gap:8px;align-content:start}
+.grid.w{grid-template-columns:repeat(11,72px);gap:10px}
+.tbl{position:relative;width:56px;height:56px;border-radius:14px;border:1px solid transparent;font-size:16px;display:grid;place-items:center;transition:transform .1s}
+.grid.w .tbl{width:72px;height:72px;border-radius:16px}
 .tbl:not(:disabled):hover{filter:brightness(1.2)}
 .tbl:not(:disabled):active{transform:scale(.95)}
 .tbl:disabled{cursor:default}
-.t-res{background:var(--sec-cont);border-color:var(--sec-cont)}
-.t-occ{background:var(--on);color:#322f35;border-color:var(--on)}
-.t-oo{background:#79757f;border-color:#79757f;color:#2f2b34}
-.t-or{background:var(--sec-cont);border-color:var(--sec-cont);color:var(--on)}
-.t-faint{border-color:#322f37;color:#4a4650;background:transparent}
-.t-faint.t-oo{background:#6c6872;border-color:#6c6872;color:#46424b}
-.t-faint.t-or{background:#2a2733;border-color:#2a2733;color:#5a5560}
-.t-mine{border-color:#f1ecf6;color:#fff}
-.t-mine.t-res{background:var(--sec-cont);border-color:var(--sec-cont)}
-.t-mine.t-occ{background:var(--on);border-color:var(--on);color:#322f35}
-.t-sel{border:2px solid var(--pri)!important;box-shadow:0 0 0 0 transparent}
+/* estados: libre verde · ocupada ámbar · cuenta roja · reservada contorno */
+.t-free{background:#1f5225;color:#b5f2b2;border-color:#1f5225}
+.t-occ{background:#574500;color:#ffe08b;border-color:#574500}
+.t-bill{background:#93000a;color:#ffdad6;border-color:#93000a}
+.t-res{background:var(--bg);color:var(--on);border-color:var(--outline)}
+.t-pk{background:var(--bg);color:var(--on);border-color:var(--outline)}
+.t-dim{opacity:.25}
+.t-mine.t-res{border-color:var(--on)}
+.t-sel{border:2px solid var(--pri)!important}
+.t-pick.t-sel{border-color:var(--pri-cont)!important}
 .t-cur{border:2px solid var(--pri)!important}
 .badge{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--pri);color:var(--on-pri);display:grid;place-items:center;border:2px solid var(--surf)}
-.badge.join{background:var(--pri-cont);color:var(--on-pri-cont)}
-.t-join{border:2px solid var(--pri-cont)!important}
+.jc{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);height:16px;padding:0 6px;border-radius:8px;background:var(--pri);color:var(--on-pri);font-size:10px;font-weight:500;display:flex;align-items:center;gap:2px;line-height:1}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .ph h3{font-weight:400;font-size:22px;line-height:28px}
 .ph small{display:block;font-size:12px;color:var(--on-var);line-height:16px;margin-top:2px}
+.empty{flex:1;margin-top:16px;border:1px dashed var(--outline);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;color:var(--on-var);font-size:14px;line-height:20px;gap:6px}
+.empty svg{color:var(--on);margin-bottom:6px}
+.empty b{font-weight:500;color:var(--on);font-size:14px}
+.nb{width:80px;height:48px;border:1px solid var(--on);border-radius:4px;background:none;color:var(--on);font-size:16px;text-align:center;outline:0}
+.nb:focus{border:2px solid var(--pri)}
+.ritem small svg{vertical-align:-3px;margin-right:4px}
 .help{font-size:12px;line-height:16px;color:var(--on-var);margin-top:12px;letter-spacing:.2px}
 .rlist{display:flex;flex-direction:column;gap:8px;margin-top:12px;overflow:auto}
 .ritem{display:flex;align-items:center;justify-content:space-between;background:var(--surf-hi);border-radius:12px;padding:0 4px 0 16px;min-height:56px}
 .ritem b{display:block;font-weight:400;font-size:16px;line-height:24px}
 .ritem small{display:block;font-size:14px;color:var(--on-var);line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
-.ritem .iconbtn{width:48px;height:48px}
+.ritem .iconbtn{width:48px;height:48px;display:grid;place-items:center}
+.ritem.vt{width:100%;text-align:left;cursor:pointer}
+.ritem.vt small{display:flex;align-items:center;max-width:none}
 .rsv{background:var(--surf-hi);border-radius:12px;padding:12px 16px;margin-top:12px}
 .rsv .t{display:flex;justify-content:space-between;font-size:12px;color:var(--on-var);margin-bottom:2px}
 .rsv .t b{font-weight:400;color:var(--on)}
@@ -385,6 +395,8 @@ const P={
  exit:"M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z",
  swap:"M6.99 11 3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z",
  merge:"M17 20.41 18.41 19 15 15.59 13.59 17 17 20.41zM7.5 8H11v5.59L5.59 19 7 20.41l6-6V8h3.5L12 3.5 7.5 8z",
+ groups:"M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z",
+ chev:"M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z",
  link:"M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z",
  error:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z",
  info:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z",
@@ -400,31 +412,30 @@ const ic=(n,s=24)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="cu
 /* ================= datos ================= */
 const NOW='6:08 p. m.', DATE='Miércoles 21 de octubre';
 const EMP0={
- '1234':{name:'Rosa',full:'Rosa Q.',shift:'6:00 – 11:00 p. m.'},
+ '1234':{name:'Rosa',full:'Rosa Q.',shift:'4:00 – 8:00 p. m.'},
  '2222':{name:'Carlos',full:'Carlos M.',shift:'4:00 – 10:00 p. m.',marked:'5:52 p. m.'},
  '3333':{name:'Luis',full:'Luis C.',shift:'8:00 p. m. – 1:00 a. m.',early:'8:00 p. m.'},
  '5555':{name:'Ana',full:'Ana P.',shift:'6:00 – 11:00 p. m.',conn:true}
 };
 const COLLEAGUES=[{n:'Carlos M.',c:5},{n:'Ana P.',c:3},{n:'Luis C.',c:4},{n:'Diego M.',c:2}];
-const IDS=[1,2,3,4,5,6,7,8,21,22,23,24,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,74,75,76,101,102,103,111,112,113,114,115,121,122,123];
-const RSV={31:{t:'9:45 p. m.',m:225,who:'Diego Paredes',p:3},4:{t:'10:30 p. m.',m:262,who:'Marta Quispe',p:2},52:{t:'7:30 p. m.',m:82,who:'Familia Ruiz',p:6},63:{t:'8:00 p. m.',m:112,who:'Andrea Salas',p:4},7:{t:'11:00 p. m.',m:292,who:'Jorge Cáceres',p:5}};
-const fmtIn=m=>'En '+(m>=60?Math.floor(m/60)+' h ':'')+String(m%60).padStart(2,'0').replace(/^0(\d)$/,'$1')+(m>=60?'':' min');
+const IDS=Array.from({length:41},(_,i)=>i+1);
 
 function freshTables(){
  const t={};
  IDS.forEach(id=>t[id]={status:'free',owner:null,pers:0,total:0,join:null});
- [2,22,61,73,42].forEach(id=>t[id].status='occ');
- [4,7,52,63,31].forEach(id=>t[id].status='res');
- [2,4,7,22,52,61,63,73].forEach(id=>t[id].owner='other');
- t[42].pers=4;t[42].total='S/ 128.50';
+ [2,17,22].forEach(id=>t[id].status='occ');
+ [10,27].forEach(id=>t[id].status='bill');
+ [4,7,13,20,24].forEach(id=>t[id].status='res');
+ [2,10,22,27].forEach(id=>t[id].owner='other');
+ t[17].pers=4;t[17].total='S/ 128.50';
  return t;
 }
 let S;
 function fresh(){
  S={screen:'home',mode:'entrada',code:'',fails:0,lockUntil:0,err:null,emp:null,empCode:null,
   employees:JSON.parse(JSON.stringify(EMP0)),dlg:null,snack:null,undo:null,
-  pick:new Set(),view:'mine',mapMode:'normal',panel:'reservas',sel:null,giveSel:new Set(),joinSel:new Set(),
-  virtuals:[{name:'Cumpleaños Vega',pers:6}],order:null,orders:{},th:null,tables:freshTables(),joins:0,count:5,pending:null};
+  pick:new Set(),view:'mine',mapMode:'normal',panel:null,sel:null,giveSel:new Set(),joinSel:new Set(),
+  virtuals:[{name:'Familia Rojas',pers:4},{name:'Oficina Andina',pers:6},{name:'Sofía y Marco',pers:2},{name:'Para llevar · Pedro',pers:1},{name:'Cuenta de Luis',pers:2}],order:null,orders:{},th:null,tables:freshTables(),joins:0,count:5,pending:null};
 }
 fresh();
 
@@ -441,11 +452,7 @@ function go(s){clearTimers();S.screen=s;S.dlg=null;render()}
 const cm=n=>n+' '+(n===1?'comensal':'comensales');
 const list=a=>a.length<=1?a.join(''):a.slice(0,-1).join(', ')+' y '+a[a.length-1];
 const mineIds=()=>IDS.filter(id=>S.tables[id].owner==='me');
-function mineCount(){
- const ids=mineIds();const js=new Set();let n=0;
- ids.forEach(id=>{const j=S.tables[id].join;if(j){if(!js.has(j)){js.add(j);n++}}else n++});
- return n;
-}
+const mineCount=()=>mineIds().length;
 const locked=()=>S.lockUntil>Date.now();
 const clockHTML=()=>`<div class="clock"><b>${NOW}</b><span>${DATE}</span></div>`;
 
@@ -511,35 +518,41 @@ function okHTML(){
 function tblClass(id,ctx){
  const t=S.tables[id], c=['tbl'];
  const mine=t.owner==='me', other=t.owner==='other';
- if(other)c.push(t.status==='occ'?'t-oo':'t-or');
- else if(t.status==='occ')c.push('t-occ');
- else if(t.status==='res')c.push('t-res');
- if(mine)c.push('t-mine');
+ const busy=t.status==='occ'||t.status==='bill';
  let dis=false;
- if(ctx==='pick'){ if(other)dis=true; if(S.pick.has(id))c.push('t-sel'); }
- if(ctx==='mine'){ if(!mine)c.push('t-faint'); if(S.sel===id)c.push('t-cur'); if(t.join)c.push('t-join'); if(!mine)dis=true; }
- if(ctx==='all'){ if(S.sel===id)c.push('t-cur'); if(t.join)c.push('t-join'); }
- if(ctx==='dar'){ if(!mine){c.push('t-faint');dis=true} if(S.giveSel.has(id))c.push('t-sel'); }
- if(ctx==='unir'){ if(t.status==='occ'){c.push('t-faint');dis=true} if(S.joinSel.has(id))c.push('t-sel'); }
+ if(ctx==='pick'){
+  c.push('t-pick');
+  if(other){c.push('t-occ','t-dim');dis=true}else c.push('t-pk');
+  if(S.pick.has(id))c.push('t-sel');
+ }else{
+  // fuera de «Todo el salón» las mesas dimmed se pintan con el color de ocupada
+  const st=(ctx==='all')?t.status:(t.status==='bill'?'occ':t.status);
+  c.push('t-'+st);
+  if(mine)c.push('t-mine');
+  if(ctx==='mine'){ if(!mine){c.push('t-dim');dis=true} }
+  if(ctx==='all'){ if(S.sel===id)c.push('t-cur') }
+  if(ctx==='dar'){ if(!mine){c.push('t-dim');dis=true} if(S.giveSel.has(id))c.push('t-sel') }
+  if(ctx==='unir'){ if(busy){c.push('t-dim');dis=true} if(S.joinSel.has(id))c.push('t-sel') }
+ }
  return {cls:c.join(' '),dis};
 }
-function gridHTML(ctx){
- return `<div class="grid" id="grid">${IDS.map(id=>{
+function gridHTML(ctx,full){
+ return `<div class="grid${full?' w':''}" id="grid">${IDS.map(id=>{
   const {cls,dis}=tblClass(id,ctx);
   const sel=(ctx==='pick'&&S.pick.has(id))||(ctx==='dar'&&S.giveSel.has(id))||(ctx==='unir'&&S.joinSel.has(id));
-  const jn=S.tables[id].join&&(ctx==='mine'||ctx==='all');
-  return `<button class="${cls}" data-act="tbl" data-id="${id}" ${dis?'disabled':''}>${id}${sel?`<span class="badge">${ic('check',12)}</span>`:''}${jn?`<span class="badge join">${ic('link',12)}</span>`:''}</button>`}).join('')}</div>`;
+  const jn=S.tables[id].join&&(ctx==='mine'||ctx==='all'||ctx==='dar');
+  return `<button class="${cls}" data-act="tbl" data-id="${id}" ${dis?'disabled':''}>${id}${sel?`<span class="badge">${ic('check',12)}</span>`:''}${jn?`<span class="jc">${ic('link',10)}${S.tables[id].join}</span>`:''}</button>`}).join('')}</div>`;
 }
 const searchHTML=()=>`<div class="search"><span class="fl">Buscar mesa</span>${ic('search')}<input id="q" inputmode="numeric" placeholder="Número de mesa" autocomplete="off"></div>`;
 function tdesc(id){
  const t=S.tables[id];
- if(t.status==='occ')return `Ocupada · ${t.pers||4} pers.${t.total?' · '+t.total:''}`;
- if(t.status==='res')return `Reservada ${RSV[id]?RSV[id].t:''}`;
- return `Libre · ${t.pers||4} sillas`;
+ if(t.status==='occ'||t.status==='bill')return `Ocupada · ${t.pers||4} pers.${t.total?' · '+t.total:''}`;
+ if(t.status==='res')return 'Reservada · 4 sillas';
+ return 'Libre · 4 sillas';
 }
-function ritem(id,act){
+function ritem(id,act,sub){
  const t=S.tables[id];
- const tt=t.join?`Mesas unidas · ${S.tables[id].pers} pers.`:tdesc(id);
+ const tt=sub||(t.join?`Unidas · ${t.pers} pers.`:tdesc(id));
  return `<div class="ritem"><div><b>Mesa ${id}</b><small>${tt}</small></div><button class="iconbtn" data-act="${act}" data-id="${id}" aria-label="Quitar">${ic('close',20)}</button></div>`;
 }
 
@@ -553,37 +566,40 @@ function pickHTML(){
   <div class="mbody">
    <div class="panel left">${searchHTML()}${gridHTML('pick')}</div>
    <div class="panel right"><div class="ph"><div><h3>Mis mesas</h3><small>${n} ${n===1?'mesa':'mesas'}</small></div></div>
-    <div class="help">Toca una mesa para agregarla o quitarla. Las de otro server se ven atenuadas.</div>
-    <div class="rlist">${order.map(id=>ritem(id,'pick-remove')).join('')}</div></div>
+    <div class="help">${n?'Toca una mesa para agregarla o quitarla.':'Toca las mesas que atenderás en tu turno.'}</div>
+    ${n?`<div class="rlist">${order.map(id=>ritem(id,'pick-remove','Disponible · 4 sillas')).join('')}</div>`
+      :`<div class="empty">${ic('groups',32)}<b>Aún no tienes mesas</b>Elige al menos una en la lista para empezar tu turno.</div>`}</div>
   </div>
  </div>`;
 }
 
 function mapHTML(){
  const m=S.mapMode, mc=mineCount(), nv=S.virtuals.length;
- let top, ctx, right;
+ let top, ctx, right=null;
  if(m==='dar'){
-  const n=S.giveSel.size;
-  top=`<div class="title">Dar mesas</div><div class="grow"></div>${n?`<button class="pill filled" data-act="dar-send">${ic('swap',18)}Enviar ${n} ${n===1?'mesa':'mesas'}</button>`:''}<button class="pill out" data-act="dar-cancel">Cancelar</button>`;
+  const n=S.giveSel.size, mine=mineIds();
+  top=`<div class="title">Dar mesas</div><div class="grow"></div>${n?`<button class="pill tonal" data-act="dar-send">${ic('send',18)}Enviar ${n} ${n===1?'mesa':'mesas'}</button>`:''}<button class="pill out" data-act="dar-cancel">Cancelar</button>`;
   ctx='dar';
-  const mine=mineIds();
-  right=`<div class="ph"><div><h3>Mesas a dar</h3><small>${n?n+' seleccionada'+(n>1?'s':''):'Ninguna seleccionada'}</small></div></div>
-   <div class="help">Solo tus mesas asignadas son seleccionables. Toca las que quieres dar a un compañero.</div>
-   <button class="chk" data-act="dar-all"><span class="cb ${n&&n===mine.length?'on':''}">${n&&n===mine.length?ic('check'):''}</span>Todas las mesas</button>
+  const all=n&&n===mine.length;
+  right=`<div class="ph"><div><h3>Mesas a dar</h3><small>${n?`${n} de ${mine.length} seleccionadas`:'Ninguna seleccionada'}</small></div></div>
+   <div class="help">${n?'':'Toca las mesas que quieres dar a un compañero.'}</div>
+   <button class="chk" data-act="dar-all"><span class="cb ${n?'on':''}">${n?ic(all?'check':'remove'):''}</span>Todas las mesas</button>
    <div class="rlist">${[...S.giveSel].map(id=>ritem(id,'dar-remove')).join('')}</div>`;
  }else if(m==='unir'){
   const n=S.joinSel.size;
   top=`<div class="title">Unir mesas</div><div class="grow"></div><button class="pill filled" data-act="unir-go" ${n>=2?'':'disabled'}>${ic('link',18)}${n>=2?`Unir ${n} mesas`:'Unir mesas'}</button>`;
   ctx='unir';
-  right=`<div class="ph"><div><h3>Mesas a unir</h3><small>${n?`${n} seleccionadas · ${n*4} sillas`:'Elige al menos 2 mesas'}</small></div><button class="iconbtn" data-act="unir-cancel" aria-label="Cancelar">${ic('close')}</button></div>
+  right=`<div class="ph"><div><h3>Mesas a unir</h3><small>${n?`${n} ${n===1?'seleccionada':'seleccionadas'} · ${n*4} sillas`:'Elige al menos 2 mesas'}</small></div><button class="iconbtn" data-act="unir-cancel" aria-label="Cancelar">${ic('close')}</button></div>
    ${n<2?`<div class="help">Se muestra todo el salón. Las ocupadas se ven atenuadas y no se pueden unir.</div>`:''}
-   <div class="rlist">${[...S.joinSel].map(id=>ritem(id,'unir-remove')).join('')}</div>`;
+   <div class="rlist">${[...S.joinSel].map(id=>ritem(id,'unir-remove','Libre · 4 sillas')).join('')}</div>`;
  }else{
   ctx=S.view;
+  const showV=nv&&S.panel!=='opciones';
+  const tot=S.virtuals.reduce((a,v)=>a+v.pers,0);
   top=`<div class="title">Mis mesas</div>
    <div class="seg" style="width:300px"><button data-act="seg-view" data-v="mine" class="${S.view==='mine'?'on':''}">${S.view==='mine'?ic('check',18):''}Mis mesas · ${mc}</button><button data-act="seg-view" data-v="all" class="${S.view==='all'?'on':''}">${S.view==='all'?ic('check',18):''}Todo el salón</button></div>
    <div class="grow"></div>
-   ${nv?`<button class="pill tonal sm" data-act="virt-toggle">${nv} ${nv===1?'mesa virtual':'mesas virtuales'}</button>`:''}
+   ${showV?`<button class="pill tonal sm" data-act="virt-toggle">${nv} ${nv===1?'mesa virtual':'mesas virtuales'}</button>`:''}
    <button class="pill out" data-act="funciones">${ic('menu',20)}Funciones</button>`;
   if(S.panel==='opciones'){
    const t=S.sel;
@@ -591,18 +607,13 @@ function mapHTML(){
     <div class="opts"><button class="opt" data-act="crear-open">${ic('add')}Crear mesa</button><button class="opt" data-act="dar-open" ${mineIds().length?'':'disabled'}>${ic('swap')}Dar mesa</button><button class="opt wide" data-act="unir-open">${ic('merge')}Unir mesa</button></div>
     <div class="help">Toca otra mesa para ver sus opciones, o la X para volver a Próximas reservas.</div>`;
   }else if(S.panel==='virtuales'){
-   right=`<div class="ph"><div><h3>Mesas virtuales</h3><small>${nv} ${nv===1?'mesa':'mesas'}</small></div><button class="iconbtn" data-act="panel-close" aria-label="Cerrar">${ic('close')}</button></div>
-    <div class="rlist">${S.virtuals.map((v,i)=>`<div class="ritem"><div><b>${v.name}</b><small>${cm(v.pers)}</small></div><button class="iconbtn" data-act="virt-open" data-i="${i}" aria-label="Tomar pedido">${ic('fwd',20)}</button></div>`).join('')}</div>
-    <div class="help">La flecha abre la toma de pedido de la mesa virtual.</div>`;
-  }else{
-   const ids=Object.keys(RSV).map(Number).filter(id=>S.view==='all'||S.tables[id].owner==='me').sort((a,b)=>RSV[a].m-RSV[b].m);
-   right=`<div class="ph"><div><h3>Próximas reservas</h3><small>${ids.length} hoy</small></div></div>
-    ${ids.map(id=>`<div class="rsv"><div class="t"><b>${RSV[id].t}</b><span>${fmtIn(RSV[id].m)}</span></div><div class="n">${RSV[id].who}</div><div class="d">Mesa ${id} · ${RSV[id].p} pers.</div></div>`).join('')}
-    <div class="help">${S.view==='all'?'Estas son las reservas de todo el salón.':'Solo ves reservas de tus mesas. Cambia a “Todo el salón” para ver las demás.'}</div>`;
+   right=`<div class="ph"><div><h3>Mesas virtuales</h3><small>${nv} ${nv===1?'mesa':'mesas'} · ${cm(tot)}</small></div><button class="iconbtn" data-act="panel-close" aria-label="Cerrar">${ic('close')}</button></div>
+    <div class="rlist">${S.virtuals.map((v,i)=>`<button class="ritem vt" data-act="virt-open" data-i="${i}"><div><b>${v.name}</b><small>${ic('groups',16)}${cm(v.pers)}</small></div><span class="iconbtn">${ic('chev',20)}</span></button>`).join('')}</div>`;
   }
  }
+ const full=!right;
  return `<div class="screen"><div class="topbar">${top}</div>
-  <div class="mbody"><div class="panel left">${searchHTML()}${gridHTML(ctx)}</div><div class="panel right">${right}</div></div></div>`;
+  <div class="mbody"><div class="panel left${full?' full':''}">${searchHTML()}${gridHTML(ctx,full)}</div>${full?'':`<div class="panel right">${right}</div>`}</div></div>`;
 }
 
 /* ================= toma de pedido ================= */
@@ -779,14 +790,15 @@ function dlgHTML(){
  if(d.t==='early')b=`<div class="dlg c" style="width:420px"><div class="in"><div class="ic">${ic('clock',28)}</div><h4>Fuera de tu horario</h4><p>Tu turno empieza a las ${S.emp.early} y llegas con más de 15 min de anticipación. Pide la autorización de tu gerente.</p>
   <div class="field ${d.err?'err':''}" style="margin-top:24px;text-align:left"><span class="fl">Código del gerente</span><input id="mgr" type="password" inputmode="numeric" maxlength="4" autocomplete="off" value="${d.val||''}"></div>${d.err?`<div class="support" style="margin-top:6px;text-align:left">${d.err}</div>`:''}</div>
   <div class="acts" style="justify-content:flex-end"><button class="tb" data-act="dlg-early-back">Volver</button><button class="tb" data-act="dlg-early-ok">Autorizar y marcar</button></div></div>`;
- if(d.t==='confirmPick'){const ids=[...S.pick].sort((a,b)=>a-b);b=`<div class="dlg" style="width:312px"><div class="in"><h4>¿Empezar turno con ${ids.length} ${ids.length===1?'mesa':'mesas'}?</h4><p>Mesas ${list(ids)}.<br>Turno ${S.emp.shift}.</p></div><div class="acts"><button class="tb" data-act="confirm-review">Revisar</button><button class="tb" data-act="confirm-go">Empezar turno</button></div></div>`}
+
+ if(d.t==='confirmPick'){const ids=[...S.pick],end=(S.emp.shift.split('–')[1]||'').trim();b=`<div class="dlg" style="width:312px"><div class="in"><h4>¿Empezar turno con ${ids.length} ${ids.length===1?'mesa':'mesas'}?</h4><p>Atenderás ${ids.length===1?'la mesa':'las mesas'} ${list(ids)}${end?' hasta las '+end:''}${end&&end.endsWith('.')?'':'.'}</p></div><div class="acts"><button class="tb" data-act="confirm-review">Revisar</button><button class="tb" data-act="confirm-go">Empezar turno</button></div></div>`}
  if(d.t==='crear')b=`<div class="dlg" style="width:400px"><div class="in"><h4>Crear mesa</h4><p style="margin-top:12px">La mesa se agregará a Mis mesas.</p>
-  <div class="field" style="margin-top:20px;border:1px solid var(--outline)"><span class="fl">Nombre de la mesa</span><input id="nm" placeholder="Opcional" maxlength="28" autocomplete="off" value="${d.name.replace(/"/g,'&quot;')}"></div>${stepper(d.pers)}</div>
+  <div class="field" style="margin-top:20px;border:1px solid var(--outline)"><span class="fl">Nombre de la mesa</span><input id="nm" placeholder="Opcional" maxlength="28" autocomplete="off" value="${d.name.replace(/"/g,'&quot;')}"></div><div class="step" style="height:64px"><span>Comensales</span><input id="pn" class="nb" inputmode="numeric" maxlength="2" value="${d.pers||''}"></div></div>
   <div class="acts"><button class="tb" data-act="crear-cancel">Cancelar</button><button class="tb" data-act="crear-ok" ${d.pers>=1?'':'disabled'}>Crear mesa</button></div></div>`;
- if(d.t==='dar')b=`<div class="dlg" style="width:312px"><div class="in"><h4>Dar mesas</h4><p style="margin-top:12px">Elige al compañero que recibirá ${S.giveSel.size===1?'la mesa':'las '+S.giveSel.size+' mesas'}.</p></div>
+ if(d.t==='dar'){const ids=[...S.giveSel].sort((a,b)=>a-b),n=ids.length;b=`<div class="dlg" style="width:312px"><div class="in"><h4>Dar ${n===1?'1 mesa':n+' mesas'}</h4><p style="margin-top:12px">${n===1?'La mesa':'Las mesas'} ${list(ids)} ${n===1?'pasará':'pasarán'} al compañero que elijas.</p></div>
   <div style="padding:8px 12px 0">${COLLEAGUES.filter(c=>c.n!==S.emp.full).map(c=>`<button class="rad ${d.to===c.n?'on':''}" data-act="dar-pick" data-n="${c.n}"><i><s></s></i><span><b>${c.n}</b><small>En turno · ${c.c} mesas</small></span></button>`).join('')}</div>
-  <div class="acts"><button class="tb" data-act="dar-back">Cancelar</button><button class="tb" data-act="dar-ok" ${d.to?'':'disabled'}>Dar mesas</button></div></div>`;
- if(d.t==='unir'){const n=S.joinSel.size;b=`<div class="dlg" style="width:400px"><div class="in"><h4>Unir ${n} mesas</h4><p style="margin-top:12px">Indica cuántos comensales se sentarán en la unión (${n*4} sillas).</p>${stepper(d.pers)}</div>
+  <div class="acts"><button class="tb" data-act="dar-back">Cancelar</button><button class="tb" data-act="dar-ok" ${d.to?'':'disabled'}>Dar mesas</button></div></div>`}
+ if(d.t==='unir'){const ids=[...S.joinSel].sort((a,b)=>a-b),n=ids.length;b=`<div class="dlg" style="width:400px"><div class="in"><h4>Unir ${n} mesas</h4><p style="margin-top:12px">Mesas ${list(ids)} · ${n*4} sillas. ¿Cuántos comensales se sentarán?</p><div class="step" style="height:64px"><span>Comensales</span><input id="pn" class="nb" inputmode="numeric" maxlength="2" value="${d.pers||''}"></div></div>
   <div class="acts"><button class="tb" data-act="unir-back">Cancelar</button><button class="tb" data-act="unir-ok" ${d.pers>=1?'':'disabled'}>Unir mesas</button></div></div>`}
 
  if(d.t==='up'){const u=PROD[d.name].upsell;b=`<div class="dlg up"><div class="hdr"><div><small>Se agrega al ${seatName(d.si).toLowerCase()}</small><h4>¿Lo hacemos mejor?</h4></div><button class="iconbtn" data-act="up-close" aria-label="Cerrar">${ic('close')}</button></div>
@@ -845,6 +857,7 @@ function render(){
  const ing=document.getElementById('ing');if(ing)ing.addEventListener('input',()=>{S.dlg.ing=ing.value});
  const swq=document.getElementById('swq');if(swq)swq.addEventListener('input',()=>{const v=swq.value.trim().toLowerCase();stage.querySelectorAll('.swm .so').forEach(b=>{b.style.display=b.dataset.f.includes(v)?'':'none'})});
  const pq=document.getElementById('pq');if(pq){pq.addEventListener('focus',()=>pq.select());pq.addEventListener('input',()=>{const v=parseInt(pq.value.replace(/\D/g,''),10);S.dlg.qty=v>0?Math.min(v,99):1;if(pq.value!=='')pq.value=String(S.dlg.qty)})}
+ const pn=document.getElementById('pn');if(pn)pn.addEventListener('input',()=>{const v=parseInt(pn.value.replace(/\D/g,''),10)||0;S.dlg.pers=Math.min(v,99);const ok=document.querySelector('[data-act="crear-ok"],[data-act="unir-ok"]');if(ok)ok.disabled=!(S.dlg.pers>=1)});
  const nm=document.getElementById('nm'); if(nm){nm.addEventListener('input',()=>{S.dlg.name=nm.value});if(!S.dlg.touched){S.dlg.touched=true;setTimeout(()=>nm.focus(),0)}}
 }
 
@@ -892,11 +905,11 @@ function toPick(justMarked){
 function resetCode(m){S.mode=m;S.code='';S.err=null;S.fails=S.fails;S.screen='code';S.dlg=null;S.snack=null;clearTimers();if(locked())startLock();render()}
 
 function enterMap(){
- S.screen='map';S.dlg=null;S.view='mine';S.mapMode='normal';S.panel='reservas';S.sel=null;render();
+ S.screen='map';S.dlg=null;S.view='mine';S.mapMode='normal';S.panel=null;S.sel=null;render();
 }
 function startMapNow(quiet){ // sin login: entra directo al mapa con las mesas asignadas
  fresh();S.emp=S.employees['1234'];S.empCode='1234';S.employees['1234'].marked=NOW;
- [31,41,42,43].forEach(id=>S.tables[id].owner='me');S.tables[41].pers=4;
+ [13,16,17,18].forEach(id=>S.tables[id].owner='me');S.tables[16].pers=4;S.tables[18].pers=4;
  enterMap();if(!quiet)snack('Turno iniciado · 4 mesas asignadas');render();
 }
 
@@ -947,9 +960,9 @@ stage.addEventListener('click',e=>{
   case 'undo-turno':if(S.undo){S.undo();S.undo=null}render();break;
   /* mapa */
   case 'seg-view':S.view=d.v;S.sel=null;render();break;
-  case 'panel-close':S.panel='reservas';S.sel=null;render();break;
-  case 'funciones':S.panel=S.panel==='opciones'?'reservas':'opciones';render();break;
-  case 'virt-toggle':S.panel=S.panel==='virtuales'?'reservas':'virtuales';S.sel=null;render();break;
+  case 'panel-close':S.panel=null;S.sel=null;render();break;
+  case 'funciones':S.panel=S.panel==='opciones'?null:'opciones';render();break;
+  case 'virt-toggle':S.panel=S.panel==='virtuales'?null:'virtuales';S.sel=null;render();break;
   case 'virt-open':openOrder(S.virtuals[+d.i].name,S.virtuals[+d.i].pers);break;
   case 'order-back':S.screen='map';S.snack=null;render();break;
   case 'opts':snack('Opciones de mesa: fuera del alcance de este prototipo.');render();break;
@@ -1013,15 +1026,15 @@ stage.addEventListener('click',e=>{
     o.cur=r.si;S.screen='order';S.th=null;snack(r.upd);render();break}
    addItem(o,r.si,r.it);
    o.cur=r.si;S.screen='order';S.th=null;snack(r.msg);render();break}
-  case 'crear-open':S.dlg={t:'crear',name:'',pers:0};render();break;
+  case 'crear-open':S.dlg={t:'crear',name:'',pers:4};render();break;
   case 'crear-cancel':S.dlg=null;render();break;
   case 'step':if(S.dlg){S.dlg.pers=Math.max(0,S.dlg.pers+(+d.d));render()}break;
   case 'crear-ok':{
    const nameVal=(S.dlg.name||'').trim()||('Mesa virtual '+(S.virtuals.length+1));
-   const v={name:nameVal,pers:S.dlg.pers};S.virtuals.push(v);S.dlg=null;S.panel='reservas';
+   const v={name:nameVal,pers:S.dlg.pers};S.virtuals.push(v);S.dlg=null;S.panel=null;
    snack(`${v.name} · ${cm(v.pers)}`,{label:'Tomar pedido',act:'snack-order',ms:7000});S.order=v;render();break}
   case 'snack-order':openOrder(S.order.name,S.order.pers);break;
-  case 'dar-open':S.mapMode='dar';S.giveSel=new Set();S.view='mine';S.panel='reservas';S.sel=null;render();break;
+  case 'dar-open':S.mapMode='dar';S.giveSel=new Set();S.view='mine';S.panel=null;S.sel=null;render();break;
   case 'dar-cancel':S.mapMode='normal';S.giveSel=new Set();render();break;
   case 'dar-remove':S.giveSel.delete(+d.id);render();break;
   case 'dar-all':{const m=mineIds();S.giveSel=S.giveSel.size===m.length?new Set():new Set(m);render();break}
@@ -1032,20 +1045,23 @@ stage.addEventListener('click',e=>{
    const ids=[...S.giveSel].sort((a,b)=>a-b),to=S.dlg.to;const prev=ids.map(id=>({id,join:S.tables[id].join}));
    ids.forEach(id=>{S.tables[id].owner='other'});
    S.mapMode='normal';S.giveSel=new Set();S.dlg=null;
-   snack(`${ids.length===1?'Mesa':'Mesas'} ${list(ids)} dada${ids.length>1?'s':''} a ${to}`,{label:'Deshacer',act:'undo-simple',ms:6500});
+   snack(`${ids.length===1?'Mesa':'Mesas'} ${list(ids)} ${ids.length===1?'enviada':'enviadas'} a ${to}`,{label:'Deshacer',act:'undo-simple',ms:6500});
    S.undo=()=>{ids.forEach(id=>S.tables[id].owner='me');S.snack=null};
    render();break}
   case 'undo-simple':if(S.undo){S.undo();S.undo=null}render();break;
-  case 'unir-open':S.mapMode='unir';S.joinSel=new Set();S.view='all';S.panel='reservas';S.sel=null;render();break;
+  case 'unir-open':S.mapMode='unir';S.joinSel=new Set();S.view='all';S.panel=null;S.sel=null;render();break;
   case 'unir-cancel':S.mapMode='normal';S.joinSel=new Set();render();break;
   case 'unir-remove':S.joinSel.delete(+d.id);render();break;
-  case 'unir-go':S.dlg={t:'unir',pers:0};render();break;
+  case 'unir-go':S.dlg={t:'unir',pers:S.joinSel.size*4-2};render();break;
   case 'unir-back':S.dlg=null;render();break;
   case 'unir-ok':{
-   const ids=[...S.joinSel].sort((a,b)=>a-b),p=S.dlg.pers;const j='J'+(++S.joins);
+   const ids=[...S.joinSel].sort((a,b)=>a-b),p=S.dlg.pers,j=++S.joins;
+   const prev=ids.map(id=>({id,o:S.tables[id].owner,j:S.tables[id].join,p:S.tables[id].pers}));
    ids.forEach(id=>{const t=S.tables[id];t.owner='me';t.join=j;t.pers=p});
    S.mapMode='normal';S.joinSel=new Set();S.dlg=null;S.view='mine';
-   snack(`Mesas ${list(ids)} unidas · ${cm(p)}`);render();break}
+   snack(`Mesas ${list(ids)} unidas · ${ids.length*4} sillas`,{label:'Deshacer',act:'undo-simple',ms:6500});
+   S.undo=()=>{prev.forEach(x=>{const t=S.tables[x.id];t.owner=x.o;t.join=x.j;t.pers=x.p});S.joins--;S.snack=null};
+   render();break}
  }
 });
 function tblTap(id){
