@@ -307,7 +307,7 @@ input{font:inherit;color:inherit}
 .ab small{font-size:12px;line-height:16px;color:var(--on-var)}
 .ab.mod{background:var(--sec-cont);border:2px solid var(--pri);padding:0 11px}
 .tag{font-size:12px;padding:2px 8px;border-radius:8px;background:var(--sec-cont);color:var(--on-pri-cont);font-weight:500;margin-left:8px}
-.tag.req{background:#5c3a3a;color:#ffdad6}
+.tag.req{background:#f2b8b5;color:#601410}
 .ocs{display:flex;flex-wrap:wrap;gap:12px 8px}
 .oc{height:40px;padding:0 16px;border:1px solid var(--outline);border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px}
 .oc:hover{background:rgba(230,224,233,.07)}
@@ -347,6 +347,18 @@ input{font:inherit;color:inherit}
 .oc.swap.on{border-style:solid}
 .ocs+.ocs{margin-top:12px}
 .dlg.pm{position:relative}
+/* personalizar / editar producto: pantalla completa (no modal) */
+.scrim.pmscr{background:var(--bg);display:block;animation:none}
+.scrim.pmscr .dlg.pm{position:absolute;inset:0;width:auto;max-width:none;height:auto;max-height:none;padding:0;border-radius:0;background:var(--bg);box-shadow:none;display:flex;flex-direction:column;overflow:visible}
+.scrim.pmscr .dlg.pm .topbar{height:65px;flex:none;padding:0 20px;gap:16px}
+.pms-body{flex:1;min-height:0;display:flex;gap:12px;padding:16px}
+.pms-rail{width:220px;flex:none;background:var(--surf);border-radius:28px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.pms-h{align-self:flex-start;font-size:16px;font-weight:500;line-height:24px;padding:0 4px 0 0}
+.pms-cont{flex:1;min-width:0;background:var(--surf);border-radius:28px;padding:16px;overflow:auto}
+.pms-cont.dense .oc{height:32px;padding:0 12px;border-radius:10px;font-size:13px}
+.pms-cont.dense .oc.on{border-radius:16px}
+.scrim.pmscr .pm-tab{height:40px;width:auto;padding:0 20px;border-radius:20px}
+.scrim.pmscr .dlg.pm .foot{height:78px;flex:none;margin:0;padding:0 16px;gap:16px;border-top:1px solid var(--outline-var)}
 .swm{position:absolute;left:266px;top:16px;width:320px;max-height:392px;background:var(--surf);border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:5;display:flex;flex-direction:column;overflow:hidden}
 .swm .sq{margin:8px;height:56px;border-radius:28px;background:var(--surf-hi);display:flex;align-items:center;gap:12px;padding:0 16px;color:var(--on-var);flex:none}
 .swm .sq input{flex:1;background:none;border:0;outline:0;font-size:16px;color:var(--on)}
@@ -852,11 +864,12 @@ function dlgHTML(){
    :`<div class="pm-pre">${PREMOD.map(v=>`<button class="pc ${d.pre===v?'on':''}" data-act="pm-pre" data-v="${v}">${v}</button>`).join('')}</div>
     <div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
     <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div>`;
-  b=`<div class="dlg pm"><h4>${d.name}</h4><div class="sub">${S.order.name} · ${money(pmPrice(d))}${P0.sub?' · '+P0.sub:''}</div>
-  <div class="pm-body"><div class="pm-rail">${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-div"></div><div class="pm-cont">${cont}</div></div>
+  const dense=gs.some(g=>g.swap);
+  b=`<div class="dlg pm"><div class="topbar"><button class="iconbtn out" data-act="pm-close" aria-label="Volver">${ic('back')}</button><div class="ttl"><b>${d.name}</b><small>${S.order.name} · ${money(pmPrice(d))}${P0.sub?' · '+P0.sub:''}</small></div></div>
+  <div class="pms-body"><div class="pms-rail"><div class="pms-h">Secciones</div>${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-cont pms-cont ${dense?'dense':''}">${cont}</div></div>
   <div class="foot"><button class="tb" data-act="pm-close" style="padding:10px 24px">Cerrar</button><button class="pill filled" style="height:56px;min-width:165px;justify-content:center;padding:0 32px;font-size:16px" data-act="pm-ok" ${ok?'':'disabled'}>${lab}</button></div>${swm}</div>`}
  if(d.t==='photo'){const p=PROD[d.name];return `<div class="photo" style="${p.img?`background-image:url('${p.img}')`:''}">${p.img?'':`<div class="ph-e">${ic('img',48)}<span>Este producto aún no tiene foto</span></div>`}<div class="ph-n">${d.name}</div><button class="ph-x" data-act="photo-close" aria-label="Cerrar">${ic('close')}</button></div>`}
- return `<div class="scrim" data-act="scrim">${b}</div>`;
+ return `<div class="scrim${d.t==='prod'?' pmscr':''}" data-act="scrim">${b}</div>`;
 }
 const snackHTML=()=>S.snack?`<div class="snack ${S.snack.err?'err':''}"><span>${S.snack.text}</span>${S.snack.label?`<button data-act="${S.snack.act}">${S.snack.label}</button>`:''}</div>`:'';
 
