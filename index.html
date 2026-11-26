@@ -272,9 +272,15 @@ input{font:inherit;color:inherit}
 .tact .mod.neg{color:#f2b8b5}
 .tact .sec{padding:6px 12px 2px;font-size:12px;font-weight:500;color:var(--on-var)}
 .lw{position:relative;overflow:hidden;touch-action:pan-y;user-select:none}
-.lw .li{transition:transform .18s}
+.lw .li{transition:transform .22s cubic-bezier(.2,0,0,1)}
 .lw.rv .li{transform:translateX(-84px)}
-.lw .rowact{position:absolute;right:8px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:500;background:#f2b8b5;color:#601410}
+.lw.drag .li{transition:none}
+.lw .rowact{position:absolute;right:8px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:500;background:#f2b8b5;color:#601410;opacity:0;pointer-events:none;transition:opacity .18s}
+.lw.rv .rowact{opacity:1;pointer-events:auto}
+.lw.out{transition:max-height .2s .14s ease,opacity .2s .1s;max-height:0!important;opacity:0}
+.lw.out .li{transform:translateX(-110%);transition:transform .24s cubic-bezier(.4,0,1,1)}
+@keyframes vback{from{transform:translateX(-84px)}to{transform:none}}
+.tact .li.void.fresh{animation:vback .3s cubic-bezier(.2,0,0,1)}
 .lw .rowact.anu{background:#8c1d18;color:#f9dedc}
 .tact .li.void{color:var(--on-var);text-decoration:line-through;opacity:.7}
 .tact .li.void em{font-style:normal;text-decoration:none;color:#f2b8b5;font-size:10px;font-weight:500;margin-left:6px}
@@ -719,8 +725,8 @@ function ticketHTML(o){
   if(i!==o.cur)return `<button class="tl" data-act="seat" data-i="${i}"><span>${seatName(i)} · ${n?n+(n===1?' ítem':' ítems'):'—'}</span>${n?`<span>${money(seatTotal(s))}</span>`:''}</button>`;
   const line=(x,k)=>{
    const act=S.swp&&S.swp.i===i&&S.swp.k===k;
-   const row=x.void?`<button class="li void" data-act="line" data-i="${i}" data-k="${k}"><span>${x.name}<em>ANULADO</em></span><span>S/-${rawTotal(x).toFixed(2).replace(/^-/,'')}</span></button>`
-    :`<div class="lw ${act?'rv':''}" data-i="${i}" data-k="${k}"><button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button>${act?`<button class="rowact ${x.sent?'anu':''}" data-act="${x.sent?'row-void':'row-quit'}" data-i="${i}" data-k="${k}">${x.sent?'Anular':'Quitar'}</button>`:''}</div>`;
+   const row=x.void?`<button class="li void${x.fresh?' fresh':''}" data-act="line" data-i="${i}" data-k="${k}"><span>${x.name}<em>ANULADO</em></span><span>S/-${rawTotal(x).toFixed(2).replace(/^-/,'')}</span></button>`
+    :`<div class="lw ${act?'rv':''}" data-i="${i}" data-k="${k}"><button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button><button class="rowact ${x.sent?'anu':''}" data-act="${x.sent?'row-void':'row-quit'}" data-i="${i}" data-k="${k}" tabindex="-1">${x.sent?'Anular':'Quitar'}</button></div>`;
    return row+(x.sub?`<div class="mod">${x.sub}</div>`:'')+(x.mods||[]).map(md=>`<div class="mod ${/^SIN |( 86| 85|DON'T MAKE)$/.test(md)?'neg':''}">${md}</div>`).join('');
   };
   const idx=s.items.map((x,k)=>k),sentK=idx.filter(k=>s.items[k].sent),newK=idx.filter(k=>!s.items[k].sent);
@@ -961,19 +967,32 @@ stage.addEventListener('pointerdown',e=>{const c=e.target.closest('.prod');if(!c
 stage.addEventListener('pointerup',lpCancel);stage.addEventListener('pointercancel',lpCancel);stage.addEventListener('pointerleave',lpCancel);
 stage.addEventListener('pointermove',e=>{if(lpT&&lpXY&&Math.hypot(e.clientX-lpXY[0],e.clientY-lpXY[1])>10)lpCancel()});
 /* deslizar una línea del ticket hacia la izquierda: Quitar (por enviar) / Anular (enviada) */
-let swiped=false,swX0=null,swRow=null;
-stage.addEventListener('pointerdown',e=>{const r=e.target.closest('.lw');swRow=r;swX0=r?[e.clientX,e.clientY]:null});
-stage.addEventListener('pointerup',e=>{
- if(!swRow||!swX0)return;const dx=e.clientX-swX0[0],dy=e.clientY-swX0[1],r=swRow;swRow=null;
- if(Math.abs(dx)>30&&Math.abs(dx)>Math.abs(dy)*1.5){swiped=true;setTimeout(()=>{swiped=false},350);const i=+r.dataset.i,k=+r.dataset.k;S.swp=dx<0?{i,k}:null;render()}
+let swiped=false,swX0=null,swRow=null,swBase=0,swDrag=false;
+const swScale=()=>stage.getBoundingClientRect().width/stage.offsetWidth||1;
+const swClose=()=>{document.querySelectorAll('.lw.rv').forEach(r=>r.classList.remove('rv'));S.swp=null};
+stage.addEventListener('pointerdown',e=>{const r=e.target.closest('.lw');swRow=r;swDrag=false;swX0=r?[e.clientX,e.clientY]:null;swBase=r&&r.classList.contains('rv')?-84:0;
+ document.querySelectorAll('.lw.rv').forEach(x=>{if(x!==r)x.classList.remove('rv')})});
+stage.addEventListener('pointermove',e=>{
+ if(!swRow||!swX0)return;const dx=(e.clientX-swX0[0])/swScale(),dy=(e.clientY-swX0[1])/swScale();
+ if(!swDrag){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.5){swDrag=true;swRow.classList.add('drag')}else return}
+ const li=swRow.querySelector('.li');li.style.transform=`translateX(${Math.max(-110,Math.min(0,swBase+dx))}px)`;
 });
+const swEnd=e=>{
+ if(!swRow||!swX0)return;const r=swRow,drag=swDrag;swRow=null;swDrag=false;if(!drag)return;
+ const dx=(e.clientX-swX0[0])/swScale(),pos=swBase+dx,li=r.querySelector('.li');
+ swiped=true;setTimeout(()=>{swiped=false},350);
+ r.classList.remove('drag');
+ const open=pos<-42;
+ requestAnimationFrame(()=>{li.style.transform='';r.classList.toggle('rv',open);S.swp=open?{i:+r.dataset.i,k:+r.dataset.k}:null});
+};
+stage.addEventListener('pointerup',swEnd);stage.addEventListener('pointercancel',swEnd);
 stage.addEventListener('contextmenu',e=>{if(e.target.closest('.prod'))e.preventDefault()});
 stage.addEventListener('click',e=>{
  if(swiped){swiped=false;return}
  if(lpFired){lpFired=false;if(!e.target.closest('[data-act="photo-close"]'))return}
  const el=e.target.closest('[data-act]'); if(!el)return;
  const a=el.dataset.act, d=el.dataset;
- if(S.swp&&!e.target.closest('.rowact')){S.swp=null;if(a==='line'){render();return}}
+ if(S.swp&&!e.target.closest('.rowact')){swClose();if(a==='line')return}
  if(a==='scrim'){ if(e.target!==el)return; if(S.dlg&&['crear','dar','unir','confirmPick'].includes(S.dlg.t)){return} return; }
  switch(a){
   case 'start':startMapNow(true);break;
@@ -1016,9 +1035,12 @@ stage.addEventListener('click',e=>{
   case 'order-back':S.screen='map';S.snack=null;render();break;
   case 'opts':snack('Opciones de mesa: fuera del alcance de este prototipo.');render();break;
   case 'send':{const o=ord();o.seats.forEach(st=>st.items.forEach(it=>{if(!it.sent){it.sent=true;it.sentAt=Date.now()}}));S.swp=null;snack('Pedido enviado a cocina · Chk 2304');render();break}
-  case 'row-quit':{const o=ord(),sI=+d.i,k=+d.k,it=o.seats[sI].items.splice(k,1)[0];S.swp=null;
-   snack(`${it.name} quitado`,{label:'Deshacer',act:'undo-simple',ms:5000});
-   S.undo=()=>{o.seats[sI].items.splice(k,0,it);S.snack=null};render();break}
+  case 'row-quit':{const o=ord(),sI=+d.i,k=+d.k,row=el.closest('.lw');
+   const doit=()=>{const it=o.seats[sI].items.splice(k,1)[0];S.swp=null;
+    snack(`${it.name} quitado`,{label:'Deshacer',act:'undo-simple',ms:5000});
+    S.undo=()=>{o.seats[sI].items.splice(k,0,it);S.snack=null};render()};
+   if(row&&!S.busyQ){S.busyQ=true;row.style.maxHeight=row.offsetHeight+'px';void row.offsetHeight;row.classList.add('out');setTimeout(()=>{S.busyQ=false;doit()},340)}else doit();
+   break}
   case 'row-void':{const it=ord().seats[+d.i].items[+d.k];S.swp=null;S.dlg={t:'void',i:+d.i,k:+d.k,name:it.name,reason:'Error del mesero',val:''};render();break}
   case 'void-reason':S.dlg.reason=d.r;render();break;
   case 'void-cancel':S.dlg=null;render();break;
@@ -1026,7 +1048,7 @@ stage.addEventListener('click',e=>{
   case 'void-back':S.dlg.t='void';render();break;
   case 'void-ok':{
    if((S.dlg.val||'')!=='9999'){S.dlg.err='Código del gerente incorrecto.';render();break}
-   const x=S.dlg,it=ord().seats[x.i].items[x.k];it.void={reason:x.reason};S.dlg=null;
+   const x=S.dlg,it=ord().seats[x.i].items[x.k];it.void={reason:x.reason};it.fresh=true;setTimeout(()=>{delete it.fresh},600);S.dlg=null;
    const st=/Limonada|Margarita|Té|Gaseosa|Cerveza|Chicha|Jugo/.test(it.name)?'Barra':'Cocina';
    snack(`${it.name} ${/a$/.test(it.name)?'anulada':'anulado'}. Se avisó a ${st} y quedó en el reporte de anulaciones.`,{ms:6000});render();break}
   case 'pay':snack('Pago: fuera del alcance de este prototipo.');render();break;
