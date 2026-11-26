@@ -1161,7 +1161,7 @@ function tblTap(id){
  if(S.mapMode==='dar'){S.giveSel.has(id)?S.giveSel.delete(id):S.giveSel.add(id);render();return}
  if(S.mapMode==='unir'){S.joinSel.has(id)?S.joinSel.delete(id):S.joinSel.add(id);render();return}
  const t=S.tables[id];
- if(t.owner==='me'&&t.status==='free'&&!t.join&&!t.pers){S.dlg={t:'abrir',id,n:4};render();return}
+ if(t.owner==='me'&&t.status==='res'&&!t.join){S.dlg={t:'abrir',id,n:4};render();return}
  if(t.owner==='me'){
   let name='Mesa '+id,pers=t.pers||4;
   if(t.join){const g=IDS.filter(x=>S.tables[x].join===t.join);name='Mesas '+list(g);}
