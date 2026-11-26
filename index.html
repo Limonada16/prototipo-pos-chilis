@@ -999,7 +999,7 @@ stage.addEventListener('click',e=>{
  if(S.swp&&!e.target.closest('.rowact')){swClose();if(a==='line')return}
  if(a==='scrim'){ if(e.target!==el)return; if(S.dlg&&['crear','dar','unir','confirmPick'].includes(S.dlg.t)){return} return; }
  switch(a){
-  case 'start':startMapNow(true);break;
+  case 'start':fresh();S.emp=S.employees['1234'];S.empCode='1234';S.employees['1234'].marked=NOW;toPick();break; /* mesas reiniciadas: empieza en «Elige tus mesas» */
   case 'back':S.code='';S.err=null;go('home');break;
   case 'seg':S.mode=d.m;S.err=null;render();break;
   case 'key':if(S.code.length<4){S.code+=d.k;S.err=null;render()}break;
