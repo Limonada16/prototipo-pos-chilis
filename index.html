@@ -252,7 +252,7 @@ input{font:inherit;color:inherit}
 .cch{height:32px;padding:0 9px;border:1px solid var(--outline-var);border-radius:8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;flex:none}
 .cch.on{background:var(--sec-cont);border-color:var(--sec-cont)}
 .prods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;align-content:start;overflow:auto;flex:1;min-height:0;padding-bottom:4px;scrollbar-width:thin}
-.prod{position:relative;width:auto;height:78px;flex:none;border:1px solid var(--outline-var);border-radius:12px;background:var(--surf);padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-size:14px;line-height:18px;font-weight:500;transition:transform .1s}
+.prod{position:relative;width:auto;height:100px;flex:none;border:1px solid var(--outline-var);border-radius:12px;background:var(--surf);padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-size:14px;line-height:18px;font-weight:500;transition:transform .1s}
 .prod>span:last-child{font-weight:400}
 .prod .pn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-right:14px}
 .prod:hover{filter:brightness(1.15)}
@@ -780,10 +780,9 @@ function threeHTML(){
   const grp=(g,t,L)=>`<div class="th-sec"><h6>${t}</h6><div class="ocs" style="gap:8px">${L.map(o=>{const on=sd[g]===o.n,mm=on?sd.m[g]:[];return `<button class="oc ${on?'t':''}" data-act="th-pick" data-g="${g}" data-v="${o.n}">${on?ic('check',18):''}${o.n}${o.x?` · + ${money(o.x)}`:''}${mm.length?` · ${mm.join(' · ')}`:''}${on?`<span class="pen" data-act="th-mod" data-g="${g}" role="button" aria-label="Modificadores">${ic('edit',18)}</span>`:''}</button>`}).join('')}</div></div>`;
   if(solo)body=`<div class="thb"><div class="panel" style="flex:1;padding:20px 12px 8px;min-width:0;overflow:auto"><div class="ph" style="padding:0 12px 0 12px;margin-bottom:12px"><h3 style="font-size:18px;align-self:center">Asiento ${th.seat}</h3><span class="chipc ${chosen===3?'ok':''}">${chosen} de 3 elegidos</span></div>
    ${grp('e','Entrada',ENT)}${grp('p','Plato principal',PL)}${grp('b','Bebida',BEB)}</div></div>`;
-  else body=`<div class="thb"><div class="panel" style="width:340px;padding:20px 12px 12px 12px;flex:none"><div class="ph" style="padding:0 0 0 4px"><h3 style="font-size:18px;align-self:center">Asientos</h3><span class="chipc">${done} / ${n} con pedido</span></div>
-   <div class="help" style="margin:16px 4px 16px">El punto pivote es el asiento 1; el resto sigue en sentido horario.</div>
-   <div class="seats" style="gap:20px 20px;padding-left:6px">${th.seats.map((s,i)=>`<button class="seatc ${i+1===k?'on':seatDone(s)?'dn':''}" data-act="th-seat" data-i="${i+1}">${i+1}</button>`).join('')}</div></div>
-   <div class="panel" style="flex:1;padding:20px 12px 8px;min-width:0;overflow:auto"><div class="ph" style="padding:0 12px 0 12px;margin-bottom:12px"><h3 style="font-size:18px;align-self:center">Asiento ${k}${k===1?' · punto pivote':''}</h3><span class="chipc ${chosen===3?'ok':''}">${chosen} de 3 elegidos</span></div>
+  else body=`<div class="thb" style="flex-direction:column"><div class="panel" style="flex:none;flex-direction:row;align-items:center;gap:16px;padding:12px 16px 12px 16px"><div class="ph" style="align-items:center;gap:12px"><h3 style="font-size:18px;align-self:center">Asientos</h3><span class="chipc">${done} / ${n} con pedido</span></div>
+   <div class="seats" style="gap:16px;flex-wrap:nowrap">${th.seats.map((s,i)=>`<button class="seatc ${i+1===k?'on':seatDone(s)?'dn':''}" data-act="th-seat" data-i="${i+1}">${i+1}</button>`).join('')}</div></div>
+   <div class="panel" style="flex:1;padding:20px 12px 8px;min-width:0;overflow:auto"><div class="ph" style="padding:0 12px 0 12px;margin-bottom:12px"><h3 style="font-size:18px;align-self:center">Asiento ${k}</h3><span class="chipc ${chosen===3?'ok':''}">${chosen} de 3 elegidos</span></div>
    ${grp('e','Entrada',ENT)}${grp('p','Plato principal',PL)}${grp('b','Bebida',BEB)}</div></div>`;
  }else{
   const cols=[['e','1 · Entrada',ENT],['p','2 · Plato principal',PL],['b','3 · Bebida',BEB]];
@@ -830,7 +829,7 @@ function dlgHTML(){
   <div class="up-card best"><div style="display:flex;gap:8px"><span class="chp" style="gap:8px">${ic('star',18)}Más pedido</span><span class="chp">+ ${money(u.p-PROD[d.name].p)}</span></div><div class="imgp">${ic('img',24)}<span>${u.name}</span></div><div><h5>${u.name}</h5><p style="margin-top:8px">${u.desc}</p></div><div class="pr">${money(u.p)}<small>en vez de ${money(PROD[d.name].p)}</small></div><button class="pill filled big" style="height:56px;border-radius:28px;font-size:16px" data-act="up-change">Cambiar a ${u.name}</button></div></div></div>`}
  if(d.t==='tmod'){
   const tab=(k,l,i)=>`<button class="pm-tab ${d.sec===k?'on':''}" data-act="pm-sec" data-v="${k}">${ic(i,20)}${l}</button>`;
-  const sub=d.mode==='qty'?`${GL[d.g]} · aplica a ${d.n} de ${d.max} unidades`:`Asiento ${d.seat} · ${GL[d.g]}${d.seat===1?' · punto pivote':''}`;
+  const sub=d.mode==='qty'?`${GL[d.g]} · aplica a ${d.n} de ${d.max} unidades`:`Asiento ${d.seat} · ${GL[d.g]}`;
   const qn=d.mode==='qty'?`<div class="step" style="margin:0 0 16px;height:56px"><span>Unidades con modificador</span><div class="c"><button class="sb" data-act="tm-n" data-d="-1" ${d.n<=1?'disabled':''} aria-label="Menos">${ic('remove',20)}</button><b>${d.n}</b><button class="sb f" data-act="tm-n" data-d="1" ${d.n>=d.max?'disabled':''} aria-label="Más">${ic('add',20)}</button></div></div>`:'';
   const cont=d.sec==='pers'
    ?`<div class="help" style="margin:0">Este producto no tiene personalización.</div>`
@@ -938,10 +937,10 @@ function startMapNow(quiet){ // sin login: entra directo al mapa con las mesas a
 }
 
 /* ================= eventos ================= */
-/* mantener presionada una card 1.5 s abre la foto del producto; un toque corto sigue su flujo normal */
+/* mantener presionada una card 1 s abre la foto del producto; un toque corto sigue su flujo normal */
 let lpT=null,lpFired=false,lpXY=null;
 const lpCancel=()=>{clearTimeout(lpT);lpT=null};
-stage.addEventListener('pointerdown',e=>{const c=e.target.closest('.prod');if(!c||S.dlg)return;lpFired=false;lpXY=[e.clientX,e.clientY];lpCancel();lpT=setTimeout(()=>{lpT=null;lpFired=true;S.dlg={t:'photo',name:c.dataset.n};render()},1500)});
+stage.addEventListener('pointerdown',e=>{const c=e.target.closest('.prod');if(!c||S.dlg)return;lpFired=false;lpXY=[e.clientX,e.clientY];lpCancel();lpT=setTimeout(()=>{lpT=null;lpFired=true;S.dlg={t:'photo',name:c.dataset.n};render()},1000)});
 stage.addEventListener('pointerup',lpCancel);stage.addEventListener('pointercancel',lpCancel);stage.addEventListener('pointerleave',lpCancel);
 stage.addEventListener('pointermove',e=>{if(lpT&&lpXY&&Math.hypot(e.clientX-lpXY[0],e.clientY-lpXY[1])>10)lpCancel()});
 /* deslizar una línea del ticket hacia la izquierda: Quitar (por enviar) / Anular (enviada) */
