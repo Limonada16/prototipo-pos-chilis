@@ -270,6 +270,14 @@ input{font:inherit;color:inherit}
 .tact .li{display:flex;justify-content:space-between;padding:6px 12px;font-size:14px;font-weight:500;width:100%;text-align:left}
 .tact .mod{padding:0 12px 0 24px;font-size:12px;color:var(--on-var);line-height:22px}
 .tact .mod.neg{color:#f2b8b5}
+.tact .sec{padding:6px 12px 2px;font-size:12px;font-weight:500;color:var(--on-var)}
+.lw{position:relative;overflow:hidden;touch-action:pan-y;user-select:none}
+.lw .li{transition:transform .18s}
+.lw.rv .li{transform:translateX(-84px)}
+.lw .rowact{position:absolute;right:8px;top:50%;transform:translateY(-50%);height:28px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:500;background:#f2b8b5;color:#601410}
+.lw .rowact.anu{background:#8c1d18;color:#f9dedc}
+.tact .li.void{color:var(--on-var);text-decoration:line-through;opacity:.7}
+.tact .li.void em{font-style:normal;text-decoration:none;color:#f2b8b5;font-size:10px;font-weight:500;margin-left:6px}
 .tact .empty{padding:2px 12px 4px;font-size:12px;color:var(--on-var);line-height:16px}
 .tot{display:flex;justify-content:space-between;align-items:baseline;padding:10px 4px 8px;font-size:12px;color:var(--on-var)}
 .tot b{font-weight:400;font-size:24px;color:var(--on)}
@@ -673,16 +681,18 @@ const pmPrice=d=>d.price+Object.values(d.sw||{}).reduce((a,n)=>a+swX(n),0);
 const money=n=>'S/ '+Number(n).toFixed(2);
 function newOrder(n){return {seats:Array.from({length:n+1},()=>({items:[]})),cur:Math.min(1,n),cat:'Promos'}}
 function ord(){const m=S.order;let o=S.orders[m.name];if(!o||o.seats.length!==m.pers+1)o=S.orders[m.name]=newOrder(m.pers);return o}
-function openOrder(name,pers){S.order={name,pers};ord();S.screen='order';S.snack=null;S.dlg=null;S.sel=null;render()}
+function openOrder(name,pers){S.swp=null;S.order={name,pers};ord();S.screen='order';S.snack=null;S.dlg=null;S.sel=null;render()}
 const seatName=i=>i===0?'Compartido':'Asiento '+i;
-const itemTotal=it=>it.total!=null?it.total:it.price*it.qty;
-const seatItems=s=>s.items.reduce((a,i)=>a+i.qty,0);
+const itemTotal=it=>it.void?0:(it.total!=null?it.total:it.price*it.qty);
+const seatItems=s=>s.items.reduce((a,i)=>a+(i.void?0:i.qty),0);
+const unsentCount=o=>o.seats.reduce((a,s)=>a+s.items.filter(i=>!i.sent).length,0);
+const rawTotal=it=>it.total!=null?it.total:it.price*it.qty;
 const seatTotal=s=>s.items.reduce((a,i)=>a+itemTotal(i),0);
 const orderTotal=o=>o.seats.reduce((a,s)=>a+seatTotal(s),0);
 const prodCount=(o,n)=>o.seats.reduce((a,s)=>a+s.items.filter(i=>i.base===n).reduce((b,i)=>b+i.qty,0),0);
 function addItem(o,si,it){
  const s=o.seats[si];const k=it.base+'|'+(it.mods||[]).join(',');
- const ex=(it.three||it.combo)?null:s.items.find(x=>x.k===k&&!x.three&&!x.combo);
+ const ex=(it.three||it.combo)?null:s.items.find(x=>x.k===k&&!x.three&&!x.combo&&!x.sent);
  if(ex)ex.qty+=it.qty;else s.items.push({...it,k});
 }
 function ticketHTML(o){
@@ -691,12 +701,20 @@ function ticketHTML(o){
   const n=seatItems(s);
   if(i===0&&!n&&i!==o.cur)return '';
   if(i!==o.cur)return `<button class="tl" data-act="seat" data-i="${i}"><span>${seatName(i)} · ${n?n+(n===1?' ítem':' ítems'):'—'}</span>${n?`<span>${money(seatTotal(s))}</span>`:''}</button>`;
-  const lines=s.items.length?s.items.map((x,k)=>`<button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button>${x.sub?`<div class="mod">${x.sub}</div>`:''}${(x.mods||[]).map(md=>`<div class="mod ${/^SIN |( 86| 85|DON'T MAKE)$/.test(md)?'neg':''}">${md}</div>`).join('')}`).join(''):`<div class="empty">Aún sin productos · toca una card del catálogo</div>`;
+  const line=(x,k)=>{
+   const act=S.swp&&S.swp.i===i&&S.swp.k===k;
+   const row=x.void?`<button class="li void" data-act="line" data-i="${i}" data-k="${k}"><span>${x.name}<em>ANULADO</em></span><span>S/-${rawTotal(x).toFixed(2).replace(/^-/,'')}</span></button>`
+    :`<div class="lw ${act?'rv':''}" data-i="${i}" data-k="${k}"><button class="li" data-act="line" data-i="${i}" data-k="${k}"><span>${(x.qty>1||x.three)?x.qty+'× ':''}${x.name}</span><span>${money(itemTotal(x))}</span></button>${act?`<button class="rowact ${x.sent?'anu':''}" data-act="${x.sent?'row-void':'row-quit'}" data-i="${i}" data-k="${k}">${x.sent?'Anular':'Quitar'}</button>`:''}</div>`;
+   return row+(x.sub?`<div class="mod">${x.sub}</div>`:'')+(x.mods||[]).map(md=>`<div class="mod ${/^SIN |( 86| 85|DON'T MAKE)$/.test(md)?'neg':''}">${md}</div>`).join('');
+  };
+  const idx=s.items.map((x,k)=>k),sentK=idx.filter(k=>s.items[k].sent),newK=idx.filter(k=>!s.items[k].sent);
+  const mins=sentK.length?Math.max(1,Math.round((Date.now()-Math.max(...sentK.map(k=>s.items[k].sentAt||0)))/60000)):0;
+  const lines=s.items.length?(sentK.length?`<div class="sec">Enviado · hace ${mins} min</div>`:'')+sentK.map(k=>line(s.items[k],k)).join('')+(sentK.length&&newK.length?`<div class="sec">Por enviar</div>`:'')+newK.map(k=>line(s.items[k],k)).join(''):`<div class="empty">Aún sin productos · toca una card del catálogo</div>`;
   return `<div class="tact"><div class="hd"><span>${seatName(i)}</span><span>Tomando pedido</span></div>${lines}</div>`;
  }).join('');
  return `<div class="tk"><div class="th">Ticket<span>Chk 2304</span></div><div class="tlist">${rows}</div>
   <div class="tot"><span>Total · IGV incl.</span><b>${money(tot)}</b></div>
-  <div class="tacts"><button class="snd" data-act="send" ${tot?'':'disabled'}>${ic('send',20)}Enviar</button><button class="pay" data-act="pay" ${tot?'':'disabled'}>Pagar</button></div></div>`;
+  <div class="tacts"><button class="snd" data-act="send" ${unsentCount(o)?'':'disabled'}>${ic('send',20)}Enviar</button><button class="pay" data-act="pay" ${tot?'':'disabled'}>Pagar</button></div></div>`;
 }
 function orderHTML(){
  const m=S.order,o=ord();
@@ -787,6 +805,12 @@ function dlgHTML(){
  const d=S.dlg; if(!d)return '';
  let b='';
  if(d.t==='already')b=`<div class="dlg c"><div class="in"><div class="ic">${ic('chk',28)}</div><h4>Ya marcaste tu entrada</h4><p>Hoy a las ${S.employees[S.empCode].marked}. No se registra una marca nueva.</p></div><div class="acts" style="justify-content:center"><button class="tb" data-act="dlg-home">Volver al inicio</button><button class="tb" data-act="dlg-orders">Tomar pedidos</button></div></div>`;
+ if(d.t==='void')b=`<div class="dlg" style="width:360px"><div class="in"><h4>Anular «${d.name}»</h4><p style="margin-top:12px">Ya se envió a cocina. Elige el motivo de la anulación.</p></div>
+  <div style="padding:8px 12px 0">${['Error del mesero','Cliente cambió de opinión','Demora en cocina'].map(r=>`<button class="rad ${d.reason===r?'on':''}" data-act="void-reason" data-r="${r}"><i><s></s></i><span><b>${r}</b></span></button>`).join('')}</div>
+  <div class="acts"><button class="tb" data-act="void-cancel">Cancelar</button><button class="tb" data-act="void-next">Continuar</button></div></div>`;
+ if(d.t==='voidmgr')b=`<div class="dlg" style="width:400px"><div class="in"><h4>Aprobación del gerente</h4><p style="margin-top:12px">Anular un ítem enviado a cocina requiere el código del gerente.</p>
+  <div class="field ${d.err?'err':''}" style="margin-top:20px;text-align:left"><span class="fl">Código del gerente</span><input id="mgr" type="password" inputmode="numeric" maxlength="4" placeholder="4 dígitos" autocomplete="off" value="${d.val||''}"></div>${d.err?`<div class="support" style="margin-top:6px;text-align:left">${d.err}</div>`:''}</div>
+  <div class="acts"><button class="tb" data-act="void-back">Volver</button><button class="tb" data-act="void-ok">Autorizar y anular</button></div></div>`;
  if(d.t==='early')b=`<div class="dlg c" style="width:420px"><div class="in"><div class="ic">${ic('clock',28)}</div><h4>Fuera de tu horario</h4><p>Tu turno empieza a las ${S.emp.early} y llegas con más de 15 min de anticipación. Pide la autorización de tu gerente.</p>
   <div class="field ${d.err?'err':''}" style="margin-top:24px;text-align:left"><span class="fl">Código del gerente</span><input id="mgr" type="password" inputmode="numeric" maxlength="4" autocomplete="off" value="${d.val||''}"></div>${d.err?`<div class="support" style="margin-top:6px;text-align:left">${d.err}</div>`:''}</div>
   <div class="acts" style="justify-content:flex-end"><button class="tb" data-act="dlg-early-back">Volver</button><button class="tb" data-act="dlg-early-ok">Autorizar y marcar</button></div></div>`;
@@ -920,11 +944,20 @@ const lpCancel=()=>{clearTimeout(lpT);lpT=null};
 stage.addEventListener('pointerdown',e=>{const c=e.target.closest('.prod');if(!c||S.dlg)return;lpFired=false;lpXY=[e.clientX,e.clientY];lpCancel();lpT=setTimeout(()=>{lpT=null;lpFired=true;S.dlg={t:'photo',name:c.dataset.n};render()},1500)});
 stage.addEventListener('pointerup',lpCancel);stage.addEventListener('pointercancel',lpCancel);stage.addEventListener('pointerleave',lpCancel);
 stage.addEventListener('pointermove',e=>{if(lpT&&lpXY&&Math.hypot(e.clientX-lpXY[0],e.clientY-lpXY[1])>10)lpCancel()});
+/* deslizar una línea del ticket hacia la izquierda: Quitar (por enviar) / Anular (enviada) */
+let swiped=false,swX0=null,swRow=null;
+stage.addEventListener('pointerdown',e=>{const r=e.target.closest('.lw');swRow=r;swX0=r?[e.clientX,e.clientY]:null});
+stage.addEventListener('pointerup',e=>{
+ if(!swRow||!swX0)return;const dx=e.clientX-swX0[0],dy=e.clientY-swX0[1],r=swRow;swRow=null;
+ if(Math.abs(dx)>30&&Math.abs(dx)>Math.abs(dy)*1.5){swiped=true;setTimeout(()=>{swiped=false},350);const i=+r.dataset.i,k=+r.dataset.k;S.swp=dx<0?{i,k}:null;render()}
+});
 stage.addEventListener('contextmenu',e=>{if(e.target.closest('.prod'))e.preventDefault()});
 stage.addEventListener('click',e=>{
+ if(swiped){swiped=false;return}
  if(lpFired){lpFired=false;if(!e.target.closest('[data-act="photo-close"]'))return}
  const el=e.target.closest('[data-act]'); if(!el)return;
  const a=el.dataset.act, d=el.dataset;
+ if(S.swp&&!e.target.closest('.rowact')){S.swp=null;if(a==='line'){render();return}}
  if(a==='scrim'){ if(e.target!==el)return; if(S.dlg&&['crear','dar','unir','confirmPick'].includes(S.dlg.t)){return} return; }
  switch(a){
   case 'start':startMapNow(true);break;
@@ -966,7 +999,20 @@ stage.addEventListener('click',e=>{
   case 'virt-open':openOrder(S.virtuals[+d.i].name,S.virtuals[+d.i].pers);break;
   case 'order-back':S.screen='map';S.snack=null;render();break;
   case 'opts':snack('Opciones de mesa: fuera del alcance de este prototipo.');render();break;
-  case 'send':snack('Pedido enviado a cocina · Chk 2304');render();break;
+  case 'send':{const o=ord();o.seats.forEach(st=>st.items.forEach(it=>{if(!it.sent){it.sent=true;it.sentAt=Date.now()}}));S.swp=null;snack('Pedido enviado a cocina · Chk 2304');render();break}
+  case 'row-quit':{const o=ord(),sI=+d.i,k=+d.k,it=o.seats[sI].items.splice(k,1)[0];S.swp=null;
+   snack(`${it.name} quitado`,{label:'Deshacer',act:'undo-simple',ms:5000});
+   S.undo=()=>{o.seats[sI].items.splice(k,0,it);S.snack=null};render();break}
+  case 'row-void':{const it=ord().seats[+d.i].items[+d.k];S.swp=null;S.dlg={t:'void',i:+d.i,k:+d.k,name:it.name,reason:'Error del mesero',val:''};render();break}
+  case 'void-reason':S.dlg.reason=d.r;render();break;
+  case 'void-cancel':S.dlg=null;render();break;
+  case 'void-next':S.dlg.t='voidmgr';S.dlg.err=null;render();break;
+  case 'void-back':S.dlg.t='void';render();break;
+  case 'void-ok':{
+   if((S.dlg.val||'')!=='9999'){S.dlg.err='Código del gerente incorrecto.';render();break}
+   const x=S.dlg,it=ord().seats[x.i].items[x.k];it.void={reason:x.reason};S.dlg=null;
+   const st=/Limonada|Margarita|Té|Gaseosa|Cerveza|Chicha|Jugo/.test(it.name)?'Barra':'Cocina';
+   snack(`${it.name} ${/a$/.test(it.name)?'anulada':'anulado'}. Se avisó a ${st} y quedó en el reporte de anulaciones.`,{ms:6000});render();break}
   case 'pay':snack('Pago: fuera del alcance de este prototipo.');render();break;
   case 'seat':ord().cur=+d.i;render();break;
   case 'cat':ord().cat=d.c;render();break;
@@ -981,6 +1027,7 @@ stage.addEventListener('click',e=>{
   case 'up-change':{const n=S.dlg.name,u=PROD[n].upsell,o=ord();addItem(o,S.dlg.si,{base:n,name:u.name,price:u.p,qty:1,mods:[]});S.dlg=null;snack(`Cambiaste a ${u.name}`);render();break}
   case 'line':{
    const o=ord(),it=o.seats[+d.i].items[+d.k];
+   if(it&&(it.sent||it.void))break;
    if(it&&it.th){openThreeEdit(it,+d.i,+d.k);break}
    if(it&&it.custom){const c=it.custom;S.dlg={t:'prod',mode:'edit',name:it.base,price:PROD[it.base].p,sel:{...c.sel},mm:{...(c.mm||{})},sw:{...(c.sw||{})},swm:null,pre:null,sec:'pers',qty:it.qty,si:+d.i,idx:+d.k};S.dlg.orig=pmKey(S.dlg);render()}
    break}
