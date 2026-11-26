@@ -357,6 +357,10 @@ input{font:inherit;color:inherit}
 .pms-cont{flex:1;min-width:0;background:var(--surf);border-radius:28px;padding:16px;overflow:auto}
 .pms-cont.dense .oc{height:32px;padding:0 12px;border-radius:10px;font-size:13px}
 .pms-cont.dense .oc.on{border-radius:16px}
+/* Modificadores: la barra de pre-modificadores queda fija y solo las abreviaturas se desplazan */
+.pms-cont.mods{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.pms-cont.mods>.pm-pre,.pms-cont.mods>.step{flex:none}
+.pm-scroll{flex:1;min-height:0;overflow:auto;padding-bottom:16px;overscroll-behavior:contain}
 .scrim.pmscr .pm-tab{height:40px;width:auto;padding:0 20px;border-radius:20px}
 .scrim.pmscr .dlg.pm .foot{height:78px;flex:none;margin:0;padding:0 16px;gap:16px;border-top:1px solid var(--outline-var)}
 .swm{position:absolute;left:266px;top:16px;width:320px;max-height:392px;background:var(--surf);border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:5;display:flex;flex-direction:column;overflow:hidden}
@@ -846,10 +850,10 @@ function dlgHTML(){
   const cont=d.sec==='pers'
    ?`<div class="help" style="margin:0">Este producto no tiene personalización.</div>`
    :`${qn}<div class="pm-pre">${PREMOD.map(v=>`<button class="pc ${d.pre===v?'on':''}" data-act="pm-pre" data-v="${v}">${v}</button>`).join('')}</div>
-    <div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
-    <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div>`;
-  b=`<div class="dlg pm"><h4>${d.name}</h4><div class="sub">${sub}</div>
-  <div class="pm-body"><div class="pm-rail">${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-div"></div><div class="pm-cont">${cont}</div></div>
+    <div class="pm-scroll"><div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
+    <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div></div>`;
+  b=`<div class="dlg pm"><div class="topbar"><button class="iconbtn out" data-act="pm-close" aria-label="Volver">${ic('back')}</button><div class="ttl"><b>${d.name}</b><small>${sub}</small></div></div>
+  <div class="pms-body"><div class="pms-rail"><div class="pms-h">Secciones</div>${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-cont pms-cont ${d.sec==='mods'?'mods':''}">${cont}</div></div>
   <div class="foot"><button class="tb" data-act="pm-close" style="padding:10px 24px">Cerrar</button><button class="pill filled" style="height:56px;min-width:165px;justify-content:center;padding:0 32px;font-size:16px" data-act="tm-ok">Agregar</button></div></div>`}
  if(d.t==='prod'){
   const P0=PROD[d.name],gs=P0.groups,done=gs.every(g=>d.sel[g.id]),miss=gs.find(g=>!d.sel[g.id]),sw=d.sw||{};
@@ -862,14 +866,14 @@ function dlgHTML(){
   const cont=d.sec==='pers'
    ?gs.map(g=>`<div class="pm-g"><div class="gl">${g.l}${tg(d.sel[g.id])}</div><div class="ocs">${g.o.map(v=>`<button class="oc ${d.sel[g.id]===v&&!sw[g.id]?'on':''}" data-act="pm-opt" data-g="${g.id}" data-v="${v}">${v}</button>`).join('')}</div>${swc(g)}</div>`).join('')
    :`<div class="pm-pre">${PREMOD.map(v=>`<button class="pc ${d.pre===v?'on':''}" data-act="pm-pre" data-v="${v}">${v}</button>`).join('')}</div>
-    <div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
-    <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div>`;
+    <div class="pm-scroll"><div class="gl" style="margin:16px 0 8px">Abreviaturas</div>
+    <div class="pm-abr">${ABR.map(([a,n])=>d.mm[a]?`<button class="ab mod" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${d.mm[a]}</small></button>`:`<button class="ab" data-act="pm-abr" data-v="${a}"><b>${a}</b><small>${n}</small></button>`).join('')}</div></div>`;
   const dense=gs.some(g=>g.swap);
   b=`<div class="dlg pm"><div class="topbar"><button class="iconbtn out" data-act="pm-close" aria-label="Volver">${ic('back')}</button><div class="ttl"><b>${d.name}</b><small>${S.order.name} · ${money(pmPrice(d))}${P0.sub?' · '+P0.sub:''}</small></div></div>
-  <div class="pms-body"><div class="pms-rail"><div class="pms-h">Secciones</div>${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-cont pms-cont ${dense?'dense':''}">${cont}</div></div>
+  <div class="pms-body"><div class="pms-rail"><div class="pms-h">Secciones</div>${tab('pers','Personalización','edit')}${tab('mods','Modificadores','list')}</div><div class="pm-cont pms-cont ${dense?'dense':''} ${d.sec==='mods'?'mods':''}">${cont}</div></div>
   <div class="foot"><button class="tb" data-act="pm-close" style="padding:10px 24px">Cerrar</button><button class="pill filled" style="height:56px;min-width:165px;justify-content:center;padding:0 32px;font-size:16px" data-act="pm-ok" ${ok?'':'disabled'}>${lab}</button></div>${swm}</div>`}
  if(d.t==='photo'){const p=PROD[d.name];return `<div class="photo" style="${p.img?`background-image:url('${p.img}')`:''}">${p.img?'':`<div class="ph-e">${ic('img',48)}<span>Este producto aún no tiene foto</span></div>`}<div class="ph-n">${d.name}</div><button class="ph-x" data-act="photo-close" aria-label="Cerrar">${ic('close')}</button></div>`}
- return `<div class="scrim${d.t==='prod'?' pmscr':''}" data-act="scrim">${b}</div>`;
+ return `<div class="scrim${(d.t==='prod'||d.t==='tmod')?' pmscr':''}" data-act="scrim">${b}</div>`;
 }
 const snackHTML=()=>S.snack?`<div class="snack ${S.snack.err?'err':''}"><span>${S.snack.text}</span>${S.snack.label?`<button data-act="${S.snack.act}">${S.snack.label}</button>`:''}</div>`:'';
 
